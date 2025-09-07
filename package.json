@@ -9,9 +9,24 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@lexical/code": "^0.34.0",
+    "@lexical/dragon": "^0.34.0",
+    "@lexical/headless": "^0.34.0",
+    "@lexical/history": "^0.34.0",
+    "@lexical/link": "^0.34.0",
+    "@lexical/list": "^0.34.0",
+    "@lexical/overflow": "^0.34.0",
+    "@lexical/plain-text": "^0.34.0",
+    "@lexical/react": "^0.34.0",
+    "@lexical/rich-text": "^0.34.0",
+    "@lexical/table": "^0.34.0",
+    "@lexical/utils": "^0.34.0",
+    "mongoose": "^8.17.2",
+    "next": "15.3.4",
+    "next-auth": "^4.24.11",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "next": "15.3.4"
+    "react-icons": "^5.5.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
