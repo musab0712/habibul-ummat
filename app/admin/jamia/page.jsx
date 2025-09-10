@@ -1,4 +1,4 @@
-// app/admin/khanaqah/page.js
+// app/admin/jamia/page.jsx
 "use client";
 
 import { useState, useEffect } from "react";
@@ -64,7 +64,7 @@ export default function AboutPageEditor() {
     const loadAboutData = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch("/api/khanaqah");
+        const response = await fetch("/api/jamia");
         if (response.ok) {
           const data = await response.json();
           if (data.success && data.data) {
@@ -100,7 +100,7 @@ export default function AboutPageEditor() {
     setMessage("");
 
     try {
-      const response = await fetch("/api/khanaqah", {
+      const response = await fetch("/api/jamia", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -213,7 +213,7 @@ export default function AboutPageEditor() {
         <div className="px-6 py-4">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold text-gray-800">
-              Khanaqah Page Management
+              Jamia Page Management
             </h1>
             <div className="flex items-center space-x-4">
               <button

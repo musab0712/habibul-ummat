@@ -34,10 +34,10 @@ export default function Sidebar() {
     { icon: <FiInfo />, text: "Trust", path: "/admin/trust" },
     { icon: <FiFileText />, text: "Fatwa", path: "/admin/fatwa" },
     { icon: <FiInfo />, text: "Khanaqah", path: "/admin/khanaqah" },
-    { icon: <FiImage />, text: "Photos", path: "/admin/photos" },
     { icon: <FiSliders />, text: "Sliders", path: "/admin/slider" },
+    { icon: <FiInfo />, text: "Jamia", path: "/admin/jamia" },
+    { icon: <FiImage />, text: "Photos", path: "/admin/photos" },
     { icon: <FiVideo />, text: "Videos", path: "/admin/videos" },
-    { icon: <FiInfo />, text: "Research", path: "/admin/research" },
     { icon: <FiSettings />, text: "Settings", path: "/admin/settings" },
   ];
 
