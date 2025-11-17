@@ -148,7 +148,7 @@ export default function ContactAdmin() {
                     id="address.english"
                     name="address.english"
                     rows={3}
-                    value={formData.address.english}
+                    value={formData?.address?.english || ""}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     required
@@ -166,7 +166,7 @@ export default function ContactAdmin() {
                     id="address.urdu"
                     name="address.urdu"
                     rows={3}
-                    value={formData.address.urdu}
+                    value={formData?.address?.urdu || ""}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-right"
                     required
@@ -191,7 +191,7 @@ export default function ContactAdmin() {
                     type="tel"
                     id="phoneNumbers.primary"
                     name="phoneNumbers.primary"
-                    value={formData.phoneNumbers.primary}
+                    value={formData?.phoneNumbers?.primary || ""}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     required
@@ -209,7 +209,7 @@ export default function ContactAdmin() {
                     type="tel"
                     id="phoneNumbers.secondary"
                     name="phoneNumbers.secondary"
-                    value={formData.phoneNumbers.secondary || ""}
+                    value={formData?.phoneNumbers?.secondary || ""}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
@@ -227,7 +227,7 @@ export default function ContactAdmin() {
                   type="email"
                   id="email"
                   name="email"
-                  value={formData.email}
+                  value={formData?.email || ""}
                   onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   required
@@ -250,7 +250,7 @@ export default function ContactAdmin() {
                     id="description.english"
                     name="description.english"
                     rows={4}
-                    value={formData.description.english}
+                    value={formData?.description?.english || ""}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     required
@@ -268,7 +268,7 @@ export default function ContactAdmin() {
                     id="description.urdu"
                     name="description.urdu"
                     rows={4}
-                    value={formData.description.urdu}
+                    value={formData?.description?.urdu || ""}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-right"
                     required

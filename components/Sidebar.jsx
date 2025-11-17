@@ -27,7 +27,7 @@ export default function Sidebar() {
 
   const menuItems = [
     { icon: <FiHome />, text: "Dashboard", path: "/admin/dashboard" },
-    { icon: <FiHome />, text: "Home", path: "/admin/home" },
+    // { icon: <FiHome />, text: "Home", path: "/admin/home" },
     { icon: <FiBook />, text: "Maktaba", path: "/admin/maktaba" },
     { icon: <FiInfo />, text: "About", path: "/admin/about" },
     { icon: <FiMail />, text: "Contact", path: "/admin/contact" },
@@ -36,9 +36,10 @@ export default function Sidebar() {
     { icon: <FiInfo />, text: "Khanaqah", path: "/admin/khanaqah" },
     { icon: <FiSliders />, text: "Sliders", path: "/admin/slider" },
     { icon: <FiInfo />, text: "Jamia", path: "/admin/jamia" },
+    { icon: <FiMail />, text: "Contact Data", path: "/admin/contacts" },
     { icon: <FiImage />, text: "Photos", path: "/admin/photos" },
     { icon: <FiVideo />, text: "Videos", path: "/admin/videos" },
-    { icon: <FiSettings />, text: "Settings", path: "/admin/settings" },
+    // { icon: <FiSettings />, text: "Settings", path: "/admin/settings" },
   ];
 
   const handleNavigation = (path) => {

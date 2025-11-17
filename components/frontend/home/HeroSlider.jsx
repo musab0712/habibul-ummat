@@ -1,4 +1,3 @@
-// pages/index.js (Debugged version with multiple fallbacks)
 "use client";
 import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -9,61 +8,63 @@ import "swiper/css/navigation";
 import Image from "next/image";
 
 export default function HeroSlider() {
-  const [sliderImages, setSliderImages] = useState([]);
+  const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);
   const [imageErrors, setImageErrors] = useState({});
 
   useEffect(() => {
-    // Fetch slider images from API
-    const fetchSliderImages = async () => {
+    const fetchSlides = async () => {
       try {
         setLoading(true);
         const response = await fetch("/api/slides");
-        const data = await response.json();
-        if (data.success) {
-          setSliderImages(data.data);
+        const result = await response.json();
+
+        if (result.success) {
+          setSlides(result.data);
         } else {
-          // Fallback data with working images
-          setSliderImages([
+          // Fallback with sample data matching your Slide model
+          setSlides([
             {
               _id: "1",
-              imageUrl: "/api/placeholder/1200/800", // Use placeholder service
-              title: "Welcome to our website",
-              subtitle: "Discover amazing features and services",
-              ctaText: "Get Started",
-              ctaLink: "/services",
+              imageUrl: "/slider-1.png",
+              publicId: "slide1",
+              createdAt: new Date(),
             },
             {
               _id: "2",
-              imageUrl: "/api/placeholder/1200/800", // Use placeholder service
-              title: "Summer Collection",
-              subtitle: "Check out our new summer arrivals",
-              ctaText: "Shop Now",
-              ctaLink: "/shop",
+              imageUrl: "/slider-1.png",
+              publicId: "slide2",
+              createdAt: new Date(),
+            },
+            {
+              _id: "3",
+              imageUrl: "/slider-3.png",
+              publicId: "slide3",
+              createdAt: new Date(),
+            },
+            {
+              _id: "4",
+              imageUrl: "/slider-4.jpg",
+              publicId: "slide4",
+              createdAt: new Date(),
+            },
+            {
+              _id: "5",
+              imageUrl: "/slider-5.jpg",
+              publicId: "slide5",
+              createdAt: new Date(),
             },
           ]);
         }
       } catch (error) {
         console.error("Error fetching slides:", error);
-        // Fallback with simple colored backgrounds
-        setSliderImages([
+        // Minimal fallback matching Slide model structure
+        setSlides([
           {
-            _id: "1",
-            imageUrl:
-              "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI4MDAiIHZpZXdCb3g9IjAgMCAxMjAwIDgwMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyMDAiIGhlaWdodD0iODAwIiBmaWxsPSIjNDI5OEY2Ii8+Cjx0ZXh0IHg9IjYwMCIgeT0iNDAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDgiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+U2xpZGUgMTwvdGV4dD4KPHN2Zz4=",
-            title: "Welcome to our website",
-            subtitle: "Discover amazing features and services",
-            ctaText: "Get Started",
-            ctaLink: "/services",
-          },
-          {
-            _id: "2",
-            imageUrl:
-              "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwMCIgaGVpZ2h0PSI4MDAiIHZpZXdCb3g9IjAgMCAxMjAwIDgwMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEyMDAiIGhlaWdodD0iODAwIiBmaWxsPSIjMTA5OTY4Ii8+Cjx0ZXh0IHg9IjYwMCIgeT0iNDAwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDgiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+U2xpZGUgMjwvdGV4dD4KPHN2Zz4=",
-            title: "Summer Collection",
-            subtitle: "Check out our new summer arrivals",
-            ctaText: "Shop Now",
-            ctaLink: "/shop",
+            _id: "fallback1",
+            imageUrl: "/images/default-slide.jpg",
+            publicId: "default-slide",
+            createdAt: new Date(),
           },
         ]);
       } finally {
@@ -71,32 +72,35 @@ export default function HeroSlider() {
       }
     };
 
-    fetchSliderImages();
+    fetchSlides();
   }, []);
 
   const handleImageError = (slideId) => {
-    console.log(`Image failed to load for slide: ${slideId}`);
     setImageErrors((prev) => ({ ...prev, [slideId]: true }));
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-xl">Loading slider...</div>
+      <div className="w-full h-64 md:h-80 lg:h-96 bg-gradient-to-r from-emerald-100 to-blue-100 animate-pulse flex items-center justify-center">
+        <div className="text-emerald-600 font-semibold">Loading slides...</div>
+      </div>
+    );
+  }
+
+  if (slides.length === 0) {
+    return (
+      <div className="w-full h-64 md:h-80 lg:h-96 bg-gradient-to-r from-emerald-500 to-blue-600 flex items-center justify-center">
+        <div className="text-white text-center">
+          <div className="text-2xl font-bold mb-2">No Slides Available</div>
+          <p className="text-lg">Please add slides from the admin panel</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Debug info */}
-      <div className="fixed top-0 left-0 z-50 bg-black text-white p-2 text-xs">
-        Slides loaded: {sliderImages.length} | Errors:{" "}
-        {Object.keys(imageErrors).length}
-      </div>
-
-      {/* Hero Slider Section */}
-      <section className="relative h-screen">
+    <div className="w-full">
+      <section className="relative">
         <Swiper
           spaceBetween={0}
           centeredSlides={true}
@@ -110,116 +114,135 @@ export default function HeroSlider() {
           }}
           navigation={true}
           modules={[Autoplay, Pagination, Navigation]}
-          className="h-full w-full"
-          onSwiper={(swiper) => console.log("Swiper initialized:", swiper)}
-          onSlideChange={() => console.log("slide change")}
+          className="w-full"
         >
-          {sliderImages.map((slide, index) => (
+          {slides.map((slide, index) => (
             <SwiperSlide key={slide._id}>
-              <div className="relative h-full w-full overflow-hidden">
-                {/* Background color fallback */}
-                <div
-                  className={`absolute inset-0 ${
-                    index % 2 === 0 ? "bg-blue-500" : "bg-green-500"
-                  }`}
-                ></div>
+              <div className="relative w-full h-[50vh] min-h-[420px] md:h-[70vh] lg:h-[80vh] max-h-[800px] overflow-hidden">
+                {/* Background Fallback */}
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-blue-600"></div>
 
-                {/* Try multiple image loading approaches */}
-                {!imageErrors[slide._id] ? (
-                  // Method 1: Next.js Image (preferred)
-                  <div className="absolute inset-0">
+                {/* Optimized Image */}
+                <div className="absolute inset-0">
+                  {!imageErrors[slide._id] ? (
                     <Image
                       src={slide.imageUrl}
-                      alt={slide.title}
+                      alt={`Slide ${index + 1}`}
                       fill
                       className="object-cover"
                       priority={index === 0}
-                      sizes="100vw"
+                      quality={75}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
+                      placeholder="blur"
+                      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAADAAQDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaUMkO0Lm6EeBzHY8pw6WPMkYjl2mGft1mCsa7gW8NvqoOTL1M1qLc5aRskjckyldkmsST/2Q=="
                       onError={() => handleImageError(slide._id)}
-                      onLoad={() => console.log(`Image loaded: ${slide._id}`)}
                     />
-                  </div>
-                ) : (
-                  // Method 2: Fallback with regular img
-                  <img
-                    src={slide.imageUrl}
-                    alt={slide.title}
-                    className="absolute inset-0 w-full h-full object-cover"
-                    onError={(e) => {
-                      console.log(
-                        "Fallback img also failed, using background color"
-                      );
-                      e.target.style.display = "none";
-                    }}
-                    onLoad={() =>
-                      console.log(`Fallback image loaded: ${slide._id}`)
-                    }
-                  />
-                )}
+                  ) : (
+                    // Fallback with gradient background
+                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-600 to-blue-700 flex items-center justify-center">
+                      <div className="text-center text-white p-4">
+                        <div className="text-2xl md:text-3xl font-bold mb-2">
+                          Slide {index + 1}
+                        </div>
+                        <div className="text-lg md:text-xl">
+                          Image not available
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
 
-                {/* Dark overlay for better text visibility */}
-                {/* <div className="absolute inset-0 bg-black bg-opacity-40 z-10"></div> */}
+                {/* Optional: Add overlay if you want to add text later */}
+                {/* <div className="absolute inset-0 bg-black bg-opacity-30 z-10"></div> */}
 
-                {/* Text content */}
-                {/* <div className="absolute inset-0 flex items-center justify-center z-20 p-4">
+                {/* Optional: Add content overlay if you extend the model later */}
+                {/* <div className="absolute inset-0 z-20 flex items-center justify-center p-4 md:p-8">
                   <div className="text-white text-center max-w-4xl">
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 drop-shadow-lg">
-                      {slide.title}
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 md:mb-4 drop-shadow-lg">
+                      Your Title Here
                     </h1>
-                    <p className="text-xl md:text-2xl lg:text-3xl mb-8 drop-shadow-md">
-                      {slide.subtitle}
+                    <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-4 md:mb-6 lg:mb-8 drop-shadow-md">
+                      Your subtitle here
                     </p>
-                    {slide.ctaText && (
-                      <a
-                        href={slide.ctaLink}
-                        className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition duration-300 transform hover:scale-105 shadow-lg"
-                      >
-                        {slide.ctaText}
-                      </a>
-                    )}
                   </div>
-                </div> */}
-
-                {/* Debug info for each slide */}
-                {/* <div className="absolute bottom-4 left-4 z-30 bg-black bg-opacity-50 text-white p-2 text-xs rounded">
-                  Slide {index + 1}: {slide._id}
-                  <br />
-                  Image: {slide.imageUrl.substring(0, 50)}...
-                  <br />
-                  Error: {imageErrors[slide._id] ? "Yes" : "No"}
                 </div> */}
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
-      </section>
 
-      {/* Other page content */}
-      <section className="py-20 container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-12">
-          Welcome to our Website
-        </h2>
-        <p className="text-lg text-gray-700 text-center max-w-3xl mx-auto">
-          This hero section slider is managed through our admin panel where you
-          can easily upload new images, set titles, subtitles, and
-          call-to-action buttons for each slide.
-        </p>
+        {/* Custom Styles */}
+        <style jsx global>{`
+          .swiper {
+            width: 100%;
+            height: 100%;
+          }
 
-        {/* Debug section */}
-        <div className="mt-12 p-4 bg-gray-100 rounded">
-          <h3 className="font-bold mb-4">Debug Information:</h3>
-          <pre className="text-xs bg-white p-2 rounded overflow-auto">
-            {JSON.stringify(
-              {
-                slidesCount: sliderImages.length,
-                imageErrors,
-                firstSlideUrl: sliderImages[0]?.imageUrl,
-              },
-              null,
-              2
-            )}
-          </pre>
-        </div>
+          .swiper-slide {
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+
+          .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+
+          .swiper-pagination-bullet {
+            width: 8px;
+            height: 8px;
+            background: white;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+          }
+
+          .swiper-pagination-bullet-active {
+            opacity: 1;
+            background: #10b981;
+            transform: scale(1.2);
+          }
+
+          .swiper-button-next,
+          .swiper-button-prev {
+            color: white;
+            background: rgba(16, 185, 129, 0.8);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            backdrop-filter: blur(10px);
+            display: none;
+          }
+
+          .swiper-button-next:after,
+          .swiper-button-prev:after {
+            font-size: 18px;
+            font-weight: bold;
+          }
+
+          @media (min-width: 1024px) {
+            .swiper-button-next,
+            .swiper-button-prev {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+          }
+
+          @media (max-width: 767px) {
+            .swiper-pagination {
+              bottom: 20px !important;
+            }
+
+            .swiper-pagination-bullet {
+              width: 6px;
+              height: 6px;
+            }
+          }
+        `}</style>
       </section>
     </div>
   );
