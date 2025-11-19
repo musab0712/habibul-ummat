@@ -114,7 +114,7 @@ const LatestBooks = () => {
               className="bg-white rounded-2xl shadow-xl border-2 border-emerald-100 hover:border-emerald-300 transition-all duration-300 hover:shadow-2xl group overflow-hidden"
             >
               {/* Book Cover */}
-              <div className="h-48 bg-gradient-to-br from-emerald-600 to-emerald-800 relative overflow-hidden">
+              <div className="h-72 bg-gradient-to-br from-emerald-600 to-emerald-800 relative overflow-hidden">
                 {book.coverImage ? (
                   <img
                     src={book.coverImage}

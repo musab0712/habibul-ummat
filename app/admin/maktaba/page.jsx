@@ -274,7 +274,7 @@ export default function BooksAdmin() {
         process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
       );
       formData.append("folder", "books-covers");
-      uploadData.append("access_mode", "public");
+      // formData.append("access_mode", "public");
 
       // Upload to Cloudinary
       const response = await fetch(
@@ -286,7 +286,8 @@ export default function BooksAdmin() {
       );
 
       if (!response.ok) {
-        throw new Error("Upload failed");
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || "Upload failed");
       }
 
       const data = await response.json();
