@@ -20,7 +20,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-emerald-50 to-green-100">
       <HeroSlider />
-      <Hero />
+      {/* <Hero /> */}
       <AboutPreview />
       {/* Features Section */}
       {/* <section className="py-16 bg-white/50 backdrop-blur-sm">
