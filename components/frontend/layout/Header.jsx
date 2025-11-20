@@ -48,25 +48,25 @@ const Header = () => {
     },
     {
       id: "about",
-      label: language === "ur" ? "تعارف" : "About",
+      label: language === "ur" ? "ہمارے بارے میں" : "About",
       icon: FaInfoCircle,
       href: "/about",
     },
     {
       id: "fatwa",
-      label: language === "ur" ? "فتویٰ" : "Fatwa",
+      label: language === "ur" ? "شرعی مسائل" : "Fatwa",
       icon: FaFileAlt,
       href: "/fatwa",
     },
     {
       id: "maktab",
-      label: language === "ur" ? "مکتب" : "Maktab",
+      label: language === "ur" ? "مكتبه" : "Maktaba",
       icon: FaGraduationCap,
       href: "/maktab",
     },
     {
       id: "jamia",
-      label: language === "ur" ? "جامعہ محجب" : "Jamia Mohajjab",
+      label: language === "ur" ? "جامعه مھذب پور" : "Jamia Muhajjabpur",
       icon: FaBuilding,
       href: "/jamia",
     },
@@ -110,7 +110,7 @@ const Header = () => {
     },
     {
       id: "contact",
-      label: language === "ur" ? "رابطہ" : "Contact Us",
+      label: language === "ur" ? "ہم سے رابطہ کریں" : "Contact",
       icon: FaPhone,
       href: "/contact",
     },
