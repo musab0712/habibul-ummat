@@ -28,7 +28,7 @@ const LatestBooks = () => {
 
       if (result.success) {
         // Get latest 6 books
-        const latestBooks = result.data.slice(0, 6);
+        const latestBooks = result.data.slice(0, 8);
         setBooks(latestBooks);
       } else {
         setError("Failed to fetch books");
@@ -107,14 +107,14 @@ const LatestBooks = () => {
         </div>
 
         {/* Books Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {books.map((book) => (
             <div
               key={book._id}
               className="bg-white rounded-2xl shadow-xl border-2 border-emerald-100 hover:border-emerald-300 transition-all duration-300 hover:shadow-2xl group overflow-hidden"
             >
-              {/* Book Cover */}
-              <div className="h-72 bg-gradient-to-br from-emerald-600 to-emerald-800 relative overflow-hidden">
+             
+              <div className="h-96 bg-gradient-to-br from-emerald-600 to-emerald-800 relative overflow-hidden">
                 {book.coverImage ? (
                   <img
                     src={book.coverImage}
@@ -131,24 +131,24 @@ const LatestBooks = () => {
                 </div>
               </div>
 
-              {/* Book Content */}
+            
               <div className="p-6">
                 <h3 className="text-xl font-bold text-emerald-900 mb-3 line-clamp-2">
                   {language === "ur" ? book.titleUrdu : book.titleEnglish}
                 </h3>
 
-                {/* Bilingual Title */}
+               
                 <p className="text-emerald-600 text-sm mb-4 line-clamp-2">
                   {language === "ur" ? book.titleEnglish : book.titleUrdu}
                 </p>
 
-                {/* Upload Date */}
+                
                 <div className="flex items-center text-emerald-500 text-sm mb-4">
                   <FaCalendar className="h-4 w-4 mr-2" />
                   <span>{formatDate(book.uploadDate)}</span>
                 </div>
 
-                {/* Action Buttons */}
+                
                 <div className="flex space-x-3">
                   <button
                     onClick={() =>
@@ -173,10 +173,65 @@ const LatestBooks = () => {
               </div>
             </div>
           ))}
+        </div> */}
+
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 pb-8">
+          {books.map((book) => (
+            <div
+              key={book._id}
+              className="group relative h-96 rounded-2xl overflow-hidden shadow-xl transition-all duration-300 hover:shadow-2xl cursor-pointer"
+            >
+              {/* Book Cover */}
+              <div className="w-full h-full">
+                {book.coverImage ? (
+                  <img
+                    src={book.coverImage}
+                    alt={language === "ur" ? book.titleUrdu : book.titleEnglish}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-emerald-600 to-emerald-800 flex items-center justify-center">
+                    <svg
+                      className="h-16 w-16 text-emerald-200"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M3 4a2 2 0 012-2h6a2 2 0 012 2v12a1 1 0 11-2 0V4H5v10a1 1 0 11-2 0V4z" />
+                    </svg>
+                  </div>
+                )}
+              </div>
+
+              {/* Overlay - Hidden by default, shown on hover */}
+              <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="text-center px-4">
+                  <h3 className="text-xl font-bold text-white mb-6 line-clamp-3">
+                    {language === "ur" ? book.titleUrdu : book.titleEnglish}
+                  </h3>
+
+                  {/* Action Buttons */}
+                  <div className="flex flex-col gap-3 w-full">
+                    <button
+                      onClick={() => window.open(book.pdfUrl, "_blank")}
+                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded-lg font-semibold transition-all duration-300"
+                    >
+                      {language === "ur" ? "پڑھیں" : "Read"}
+                    </button>
+                    <button
+                      onClick={() => window.open(book.pdfUrl, "_blank")}
+                      className="w-full bg-amber-500 hover:bg-amber-600 text-white py-2 px-4 rounded-lg font-semibold transition-all duration-300"
+                    >
+                      {language === "ur" ? "ڈاؤن لوڈ کریں" : "Download"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* View All Books Button */}
-        <div className="text-center">
+        <div className="text-center ">
           <Link
             href={`/${language}/maktab`}
             className="inline-flex items-center bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl group"

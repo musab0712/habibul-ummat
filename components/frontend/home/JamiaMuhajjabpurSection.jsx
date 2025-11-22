@@ -51,7 +51,7 @@ const JamiaMuhajjabpurSection = () => {
             <FaUniversity className="h-8 w-8 text-white" />
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            {language === "ur" ? "جامعہ محجب پور" : "Jamia Muhajjabpur"}
+            {language === "ur" ? "جامعه مھذب پور" : "Jamia Muhajjabpur"}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             {language === "ur"

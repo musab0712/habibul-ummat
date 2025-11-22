@@ -128,20 +128,24 @@ const BooksPage = () => {
       </div>
 
       {/* Books Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+      {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {error ? (
           <div className="text-center bg-red-50 border border-red-200 rounded-2xl p-8">
             <p className="text-red-600 text-lg">{error}</p>
-            <button
-              onClick={fetchAllBooks}
-              className="mt-4 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300"
-            >
+            <button className="mt-4 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300">
               {language === "ur" ? "دوبارہ کوشش کریں" : "Try Again"}
             </button>
           </div>
         ) : filteredBooks.length === 0 ? (
           <div className="text-center py-16">
-            <FaBook className="h-20 w-20 text-emerald-300 mx-auto mb-6" />
+            <svg
+              className="h-20 w-20 text-emerald-300 mx-auto mb-6"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path d="M3 4a2 2 0 012-2h6a2 2 0 012 2v12a1 1 0 11-2 0V4H5v10a1 1 0 11-2 0V4z" />
+            </svg>
             <h3 className="text-2xl font-bold text-emerald-900 mb-4">
               {language === "ur" ? "کوئی کتابیں نہیں ملیں" : "No Books Found"}
             </h3>
@@ -152,62 +156,212 @@ const BooksPage = () => {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredBooks.map((book) => (
               <div
                 key={book._id}
-                className="bg-white rounded-2xl shadow-lg border-2 border-emerald-100 hover:border-emerald-300 transition-all duration-300 hover:shadow-2xl group overflow-hidden"
+                className="group relative h-80 rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl cursor-pointer"
               >
-                {/* Book Cover */}
-                <div className="h-56 bg-gradient-to-br from-emerald-600 to-emerald-800 relative overflow-hidden">
+                <div className="w-full h-full">
                   {book.coverImage ? (
                     <img
                       src={book.coverImage}
                       alt={
                         language === "ur" ? book.titleUrdu : book.titleEnglish
                       }
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <FaBook className="h-20 w-20 text-emerald-200" />
+                    <div className="w-full h-full bg-gradient-to-br from-emerald-600 to-emerald-800 flex items-center justify-center">
+                      <svg
+                        className="h-20 w-20 text-emerald-200"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M3 4a2 2 0 012-2h6a2 2 0 012 2v12a1 1 0 11-2 0V4H5v10a1 1 0 11-2 0V4z" />
+                      </svg>
                     </div>
                   )}
                 </div>
 
-                {/* Book Content */}
-                <div className="p-6">
-                  <h3 className="text-lg font-bold text-emerald-900 mb-2 line-clamp-2 h-14">
-                    {language === "ur" ? book.titleUrdu : book.titleEnglish}
-                  </h3>
+                <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="text-center">
+                    <h3 className="text-lg font-bold text-white mb-2 line-clamp-2">
+                      {language === "ur" ? book.titleUrdu : book.titleEnglish}
+                    </h3>
 
-                  {/* Bilingual Title */}
-                  <p className="text-emerald-600 text-sm mb-3 line-clamp-2 h-10">
-                    {language === "ur" ? book.titleEnglish : book.titleUrdu}
-                  </p>
+                    <p className="text-emerald-100 text-xs mb-4 line-clamp-1">
+                      {language === "ur" ? book.titleEnglish : book.titleUrdu}
+                    </p>
 
-                  {/* Upload Date */}
-                  <div className="flex items-center text-emerald-500 text-xs mb-4">
-                    <FaCalendar className="h-3 w-3 mr-1" />
-                    <span>{formatDate(book.uploadDate)}</span>
+                    <div className="flex items-center justify-center text-emerald-200 text-xs mb-4">
+                      <svg
+                        className="h-3 w-3 mr-1"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v2h16V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h12a1 1 0 100-2H6z"
+                        />
+                      </svg>
+                      <span>{formatDate(book.uploadDate)}</span>
+                    </div>
+
+                    <div className="flex flex-col gap-2 w-full">
+                      <button
+                        onClick={() => handleReadBook(book.pdfUrl)}
+                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-3 rounded-lg font-semibold transition-all duration-300 text-sm flex items-center justify-center"
+                      >
+                        <svg
+                          className="h-4 w-4 mr-1"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M3 4a2 2 0 012-2h6a2 2 0 012 2v12a1 1 0 11-2 0V4H5v10a1 1 0 11-2 0V4z" />
+                        </svg>
+                        {language === "ur" ? "پڑھیں" : "Read"}
+                      </button>
+                      <button
+                        onClick={() => window.open(book.pdfUrl, "_blank")}
+                        className="w-full bg-amber-500 hover:bg-amber-600 text-white py-2 px-3 rounded-lg font-semibold transition-all duration-300 text-sm flex items-center justify-center"
+                      >
+                        <svg
+                          className="h-4 w-4 mr-1"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                          />
+                        </svg>
+                        {language === "ur" ? "ڈاؤن لوڈ کریں" : "Download"}
+                      </button>
+                    </div>
                   </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div> */}
 
-                  {/* Action Buttons */}
-                  <div className="flex space-x-2">
-                    <button
-                      onClick={() => handleReadBook(book.pdfUrl)}
-                      className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-3 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center text-sm group/btn"
-                    >
-                      <FaBook className="h-3 w-3 mr-1 group-hover/btn:scale-110 transition-transform" />
-                      {language === "ur" ? "پڑھیں" : "Read"}
-                    </button>
-                    <button
-                      onClick={() => window.open(book.pdfUrl, "_blank")}
-                      className="bg-amber-500 hover:bg-amber-600 text-white p-2 rounded-lg transition-all duration-300 flex items-center justify-center group/download"
-                      title={language === "ur" ? "ڈاؤن لوڈ کریں" : "Download"}
-                    >
-                      <FaDownload className="h-3 w-3 group-hover/download:scale-110 transition-transform" />
-                    </button>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {error ? (
+          <div className="text-center bg-red-50 border border-red-200 rounded-2xl p-8">
+            <p className="text-red-600 text-lg">{error}</p>
+            <button className="mt-4 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300">
+              {language === "ur" ? "دوبارہ کوشش کریں" : "Try Again"}
+            </button>
+          </div>
+        ) : filteredBooks.length === 0 ? (
+          <div className="text-center py-16">
+            <svg
+              className="h-20 w-20 text-emerald-300 mx-auto mb-6"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path d="M3 4a2 2 0 012-2h6a2 2 0 012 2v12a1 1 0 11-2 0V4H5v10a1 1 0 11-2 0V4z" />
+            </svg>
+            <h3 className="text-2xl font-bold text-emerald-900 mb-4">
+              {language === "ur" ? "کوئی کتابیں نہیں ملیں" : "No Books Found"}
+            </h3>
+            <p className="text-emerald-600 text-lg">
+              {language === "ur"
+                ? "براہ کرم اپنی تلاش کی اصطلاح تبدیل کریں"
+                : "Please try different search terms"}
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredBooks.map((book) => (
+              <div
+                key={book._id}
+                className="group relative h-80 rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl cursor-pointer"
+              >
+                {/* Book Cover - Fully Visible */}
+                <div className="w-full h-full">
+                  {book.coverImage ? (
+                    <img
+                      src={book.coverImage}
+                      alt={
+                        language === "ur" ? book.titleUrdu : book.titleEnglish
+                      }
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-emerald-600 to-emerald-800 flex items-center justify-center">
+                      <svg
+                        className="h-20 w-20 text-emerald-200"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M3 4a2 2 0 012-2h6a2 2 0 012 2v12a1 1 0 11-2 0V4H5v10a1 1 0 11-2 0V4z" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+
+                {/* Overlay - Hidden by default, shown on hover */}
+                <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4">
+                  <div className="text-center">
+                    <h3 className="text-lg font-bold text-white mb-2 line-clamp-2">
+                      {language === "ur" ? book.titleUrdu : book.titleEnglish}
+                    </h3>
+
+                    {/* Bilingual Title */}
+                    <p className="text-emerald-100 text-xs mb-4 line-clamp-1">
+                      {language === "ur" ? book.titleEnglish : book.titleUrdu}
+                    </p>
+
+                    {/* Upload Date */}
+                    <div className="flex items-center justify-center text-emerald-200 text-xs mb-4">
+                      <svg
+                        className="h-3 w-3 mr-1"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v2h16V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h12a1 1 0 100-2H6z"
+                        />
+                      </svg>
+                      <span>{formatDate(book.uploadDate)}</span>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex flex-col gap-2 w-full">
+                      <button
+                        onClick={() => handleReadBook(book.pdfUrl)}
+                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-3 rounded-lg font-semibold transition-all duration-300 text-sm flex items-center justify-center"
+                      >
+                        <svg
+                          className="h-4 w-4 mr-1"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M3 4a2 2 0 012-2h6a2 2 0 012 2v12a1 1 0 11-2 0V4H5v10a1 1 0 11-2 0V4z" />
+                        </svg>
+                        {language === "ur" ? "پڑھیں" : "Read"}
+                      </button>
+                      <button
+                        onClick={() => window.open(book.pdfUrl, "_blank")}
+                        className="w-full bg-amber-500 hover:bg-amber-600 text-white py-2 px-3 rounded-lg font-semibold transition-all duration-300 text-sm flex items-center justify-center"
+                      >
+                        <svg
+                          className="h-4 w-4 mr-1"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                          />
+                        </svg>
+                        {language === "ur" ? "ڈاؤن لوڈ کریں" : "Download"}
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
