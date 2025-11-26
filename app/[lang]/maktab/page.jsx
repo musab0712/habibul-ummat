@@ -278,10 +278,10 @@ const BooksPage = () => {
             {filteredBooks.map((book) => (
               <div
                 key={book._id}
-                className="group relative h-80 rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl cursor-pointer"
+                className="group relative h-[450px] rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl cursor-pointer"
               >
                 {/* Book Cover - Fully Visible */}
-                <div className="w-full h-full">
+                <div className="w-full h-11/12">
                   {book.coverImage ? (
                     <img
                       src={book.coverImage}
@@ -302,6 +302,10 @@ const BooksPage = () => {
                     </div>
                   )}
                 </div>
+
+                <h1 className="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-center py-2 px-4 text-sm font-semibold line-clamp-1">
+                  {language === "ur" ? book.titleUrdu : book.titleEnglish}
+                </h1>
 
                 {/* Overlay - Hidden by default, shown on hover */}
                 <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4">

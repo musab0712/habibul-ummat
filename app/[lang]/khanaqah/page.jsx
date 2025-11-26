@@ -113,10 +113,30 @@ const KahanqahPage = () => {
     try {
       const state = JSON.parse(jsonString);
 
+      const getAlignmentClass = (format) => {
+        if (!format) return "";
+        if (format === "center") return "text-center";
+        if (format === "right") return "text-right";
+        if (format === "justify") return "text-justify";
+        if (format === "left") return "text-left";
+        return "";
+      };
+
       const renderNode = (node) => {
         // Handle paragraph nodes
+        // if (node.type === "paragraph") {
+        //   return `<p class="mb-6 text-gray-700 leading-relaxed text-lg">${
+        //     node.children?.map(renderNode).join("") || ""
+        //   }</p>`;
+        // }
         if (node.type === "paragraph") {
-          return `<p class="mb-6 text-gray-700 leading-relaxed text-lg">${
+          const alignClass = getAlignmentClass(node.format);
+          const baseClasses = "mb-6 text-gray-700 leading-relaxed text-lg";
+          const classes = alignClass
+            ? `${baseClasses} ${alignClass}`
+            : baseClasses;
+
+          return `<p class="${classes}">${
             node.children?.map(renderNode).join("") || ""
           }</p>`;
         }
@@ -128,22 +148,25 @@ const KahanqahPage = () => {
           const headingTag = validTags.includes(level) ? level : "h2";
 
           const tailwindClasses = {
-            h1: "text-5xl font-bold mt-12 mb-6 text-emerald-900 text-center  ",
-            h2: "text-4xl font-bold mt-10 mb-5 text-emerald-900 text-center ",
-            h3: "text-3xl font-bold mt-8 mb-4 text-emerald-800 text-center ",
-            h4: "text-2xl font-bold mt-6 mb-3 text-emerald-800 text-center ",
-            h5: "text-xl font-bold mt-4 mb-2 text-emerald-700 text-center ",
-            h6: "text-lg font-bold mt-3 mb-2 text-emerald-700 text-center ",
+            h1: "text-5xl font-bold mt-12 mb-6 text-emerald-800 text-center",
+            h2: "text-4xl font-bold mt-10 mb-5 text-emerald-800 text-center",
+            h3: "text-3xl font-bold mt-8 mb-4 text-emerald-800 text-center",
+            h4: "text-2xl font-bold mt-6 mb-3 text-emerald-800 text-center",
+            h5: "text-xl font-bold mt-4 mb-2 text-emerald-800 text-center",
+            h6: "text-lg font-bold mt-3 mb-2 text-emerald-800 text-center",
           };
 
-          const classes = tailwindClasses[headingTag] || tailwindClasses.h2;
-
-          // Add decorative line for h2
-          // const decoration =
-          //   headingTag === "h2"
-          //     ? '<div class="absolute -bottom-2 left-0 w-20 h-1 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-full"></div>'
-          //     : "";
+          // const classes = tailwindClasses[headingTag] || tailwindClasses.h2;
           const decoration = "";
+
+          // return `<${headingTag} class="${classes}">${
+          //   node.children?.map(renderNode).join("") || ""
+          // }${decoration}</${headingTag}>`;
+          const alignClass = getAlignmentClass(node.format);
+          const baseClasses = tailwindClasses[headingTag] || tailwindClasses.h2;
+          const classes = alignClass
+            ? `${baseClasses} ${alignClass}`
+            : baseClasses;
 
           return `<${headingTag} class="${classes}">${
             node.children?.map(renderNode).join("") || ""

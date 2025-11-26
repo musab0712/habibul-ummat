@@ -25,6 +25,7 @@ import {
   $createTextNode,
   createCommand,
   COMMAND_PRIORITY_EDITOR,
+  FORMAT_ELEMENT_COMMAND,
 } from "lexical";
 import { $createHeadingNode, $createQuoteNode } from "@lexical/rich-text";
 import { $setBlocksType } from "@lexical/selection";
@@ -44,23 +45,310 @@ import {
   FaUndo,
   FaRedo,
   FaLanguage,
+  FaAlignLeft,
+  FaAlignCenter,
+  FaAlignRight,
+  FaAlignJustify,
 } from "react-icons/fa";
 
 // Toolbar Component
+// function ToolbarPlugin({ isUrdu }) {
+//   const [editor] = useLexicalComposerContext();
+//   const [isBold, setIsBold] = useState(false);
+//   const [isItalic, setIsItalic] = useState(false);
+//   const [isUnderline, setIsUnderline] = useState(false);
+//   const [isStrikethrough, setIsStrikethrough] = useState(false);
+
+//   const updateToolbar = () => {
+//     const selection = $getSelection();
+//     if ($isRangeSelection(selection)) {
+//       setIsBold(selection.hasFormat("bold"));
+//       setIsItalic(selection.hasFormat("italic"));
+//       setIsUnderline(selection.hasFormat("underline"));
+//       setIsStrikethrough(selection.hasFormat("strikethrough"));
+//     }
+//   };
+
+//   useEffect(() => {
+//     return editor.registerUpdateListener(({ editorState }) => {
+//       editorState.read(() => {
+//         updateToolbar();
+//       });
+//     });
+//   }, [editor]);
+
+//   const formatParagraph = () => {
+//     editor.update(() => {
+//       const selection = $getSelection();
+//       if ($isRangeSelection(selection)) {
+//         $setBlocksType(selection, () => $createParagraphNode());
+//       }
+//     });
+//   };
+
+//   const formatHeading = (headingSize) => {
+//     editor.update(() => {
+//       const selection = $getSelection();
+//       if ($isRangeSelection(selection)) {
+//         $setBlocksType(selection, () => $createHeadingNode(headingSize));
+//       }
+//     });
+//   };
+
+//   const formatBulletList = () => {
+//     editor.update(() => {
+//       const selection = $getSelection();
+//       if ($isRangeSelection(selection)) {
+//         const listNode = $createListNode("bullet");
+//         const listItemNode = $createListItemNode();
+//         listItemNode.append($createParagraphNode());
+//         listNode.append(listItemNode);
+//         selection.insertNodes([listNode]);
+//       }
+//     });
+//   };
+
+//   const formatNumberedList = () => {
+//     editor.update(() => {
+//       const selection = $getSelection();
+//       if ($isRangeSelection(selection)) {
+//         const listNode = $createListNode("number");
+//         const listItemNode = $createListItemNode();
+//         listItemNode.append($createParagraphNode());
+//         listNode.append(listItemNode);
+//         selection.insertNodes([listNode]);
+//       }
+//     });
+//   };
+
+//   const formatQuote = () => {
+//     editor.update(() => {
+//       const selection = $getSelection();
+//       if ($isRangeSelection(selection)) {
+//         $setBlocksType(selection, () => $createQuoteNode());
+//       }
+//     });
+//   };
+
+//   const insertLink = () => {
+//     const url = prompt("Enter URL:");
+//     if (url === null) return;
+
+//     editor.update(() => {
+//       const selection = $getSelection();
+//       if ($isRangeSelection(selection)) {
+//         const linkNode = $createLinkNode(url);
+//         const textNode = $createTextNode(url);
+//         linkNode.append(textNode);
+//         selection.insertNodes([linkNode]);
+//       }
+//     });
+//   };
+
+//   return (
+//     <div className="flex flex-wrap items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg">
+//       <button
+//         onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}
+//         className="p-2 rounded hover:bg-gray-200 transition-colors"
+//         aria-label="Undo"
+//       >
+//         <FaUndo size={16} />
+//       </button>
+//       <button
+//         onClick={() => editor.dispatchCommand(REDO_COMMAND, undefined)}
+//         className="p-2 rounded hover:bg-gray-200 transition-colors"
+//         aria-label="Redo"
+//       >
+//         <FaRedo size={16} />
+//       </button>
+
+//       <div className="w-px h-6 bg-gray-300 mx-1"></div>
+
+//       <button
+//         onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold")}
+//         className={`p-2 rounded hover:bg-gray-200 transition-colors ${
+//           isBold ? "bg-gray-300" : ""
+//         }`}
+//         aria-label="Format Bold"
+//       >
+//         <FaBold size={16} />
+//       </button>
+//       <button
+//         onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic")}
+//         className={`p-2 rounded hover:bg-gray-200 transition-colors ${
+//           isItalic ? "bg-gray-300" : ""
+//         }`}
+//         aria-label="Format Italics"
+//       >
+//         <FaItalic size={16} />
+//       </button>
+//       <button
+//         onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline")}
+//         className={`p-2 rounded hover:bg-gray-200 transition-colors ${
+//           isUnderline ? "bg-gray-300" : ""
+//         }`}
+//         aria-label="Format Underline"
+//       >
+//         <FaUnderline size={16} />
+//       </button>
+//       <button
+//         onClick={() =>
+//           editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough")
+//         }
+//         className={`p-2 rounded hover:bg-gray-200 transition-colors ${
+//           isStrikethrough ? "bg-gray-300" : ""
+//         }`}
+//         aria-label="Format Strikethrough"
+//       >
+//         <FaStrikethrough size={16} />
+//       </button>
+
+//       <div className="w-px h-6 bg-gray-300 mx-1"></div>
+
+//       <button
+//         onClick={formatParagraph}
+//         className="p-2 rounded hover:bg-gray-200 transition-colors"
+//         aria-label="Paragraph"
+//       >
+//         <FaParagraph size={16} />
+//       </button>
+//       <button
+//         onClick={() => formatHeading("h1")}
+//         className="p-2 rounded hover:bg-gray-200 transition-colors"
+//         aria-label="Heading 1"
+//       >
+//         <FaHeading size={16} />
+//       </button>
+//       <button
+//         onClick={() => formatHeading("h2")}
+//         className="p-2 rounded hover:bg-gray-200 transition-colors"
+//         aria-label="Heading 2"
+//       >
+//         <span className="text-xs font-bold">H2</span>
+//       </button>
+//       <button
+//         onClick={() => formatHeading("h3")}
+//         className="p-2 rounded hover:bg-gray-200 transition-colors"
+//         aria-label="Heading 3"
+//       >
+//         <span className="text-xs font-bold">H3</span>
+//       </button>
+
+//       <div className="w-px h-6 bg-gray-300 mx-1"></div>
+
+//       <button
+//         onClick={formatBulletList}
+//         className="p-2 rounded hover:bg-gray-200 transition-colors"
+//         aria-label="Bullet List"
+//       >
+//         <FaListUl size={16} />
+//       </button>
+//       <button
+//         onClick={formatNumberedList}
+//         className="p-2 rounded hover:bg-gray-200 transition-colors"
+//         aria-label="Numbered List"
+//       >
+//         <FaListOl size={16} />
+//       </button>
+
+//       <div className="w-px h-6 bg-gray-300 mx-1"></div>
+
+//       <button
+//         onClick={formatQuote}
+//         className="p-2 rounded hover:bg-gray-200 transition-colors"
+//         aria-label="Quote"
+//       >
+//         <FaQuoteRight size={16} />
+//       </button>
+//       <button
+//         onClick={insertLink}
+//         className="p-2 rounded hover:bg-gray-200 transition-colors"
+//         aria-label="Insert Link"
+//       >
+//         <FaLink size={16} />
+//       </button>
+
+//       <div className="w-px h-6 bg-gray-300 mx-1"></div>
+
+//       <button
+//         onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "left")}
+//         className="p-2 rounded hover:bg-gray-200 transition-colors"
+//         aria-label="Align Left"
+//       >
+//         <FaAlignLeft size={16} />
+//       </button>
+//       <button
+//         onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "center")}
+//         className="p-2 rounded hover:bg-gray-200 transition-colors"
+//         aria-label="Align Center"
+//       >
+//         <FaAlignCenter size={16} />
+//       </button>
+//       <button
+//         onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "right")}
+//         className="p-2 rounded hover:bg-gray-200 transition-colors"
+//         aria-label="Align Right"
+//       >
+//         <FaAlignRight size={16} />
+//       </button>
+//       <button
+//         onClick={() =>
+//           editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "justify")
+//         }
+//         className="p-2 rounded hover:bg-gray-200 transition-colors"
+//         aria-label="Justify"
+//       >
+//         <FaAlignJustify size={16} />
+//       </button>
+
+//       {isUrdu && (
+//         <>
+//           <div className="w-px h-6 bg-gray-300 mx-1"></div>
+//           <div className="flex items-center gap-2 text-xs text-gray-600">
+//             <FaLanguage size={14} />
+//             <span>اردو</span>
+//           </div>
+//         </>
+//       )}
+//     </div>
+//   );
+// }
 function ToolbarPlugin({ isUrdu }) {
   const [editor] = useLexicalComposerContext();
+
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderline, setIsUnderline] = useState(false);
   const [isStrikethrough, setIsStrikethrough] = useState(false);
+  const [blockAlignment, setBlockAlignment] = useState("left"); // 🔴 NEW
 
   const updateToolbar = () => {
     const selection = $getSelection();
+
     if ($isRangeSelection(selection)) {
+      // Text formatting (tumhara purana code)
       setIsBold(selection.hasFormat("bold"));
       setIsItalic(selection.hasFormat("italic"));
       setIsUnderline(selection.hasFormat("underline"));
       setIsStrikethrough(selection.hasFormat("strikethrough"));
+
+      // 🔴 NEW: Block alignment detect
+      const anchorNode = selection.anchor.getNode();
+      const topLevelElement = anchorNode.getTopLevelElementOrThrow();
+
+      if (
+        topLevelElement &&
+        typeof topLevelElement.getFormatType === "function"
+      ) {
+        const formatType = topLevelElement.getFormatType(); // 'left' | 'center' | 'right' | 'justify' | ''
+        if (!formatType || formatType === "left") {
+          setBlockAlignment("left");
+        } else {
+          setBlockAlignment(formatType);
+        }
+      } else {
+        setBlockAlignment("left");
+      }
     }
   };
 
@@ -142,6 +430,7 @@ function ToolbarPlugin({ isUrdu }) {
 
   return (
     <div className="flex flex-wrap items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg">
+      {/* Undo / Redo */}
       <button
         onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}
         className="p-2 rounded hover:bg-gray-200 transition-colors"
@@ -159,6 +448,7 @@ function ToolbarPlugin({ isUrdu }) {
 
       <div className="w-px h-6 bg-gray-300 mx-1"></div>
 
+      {/* Text formatting */}
       <button
         onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold")}
         className={`p-2 rounded hover:bg-gray-200 transition-colors ${
@@ -200,6 +490,7 @@ function ToolbarPlugin({ isUrdu }) {
 
       <div className="w-px h-6 bg-gray-300 mx-1"></div>
 
+      {/* Paragraph / Headings */}
       <button
         onClick={formatParagraph}
         className="p-2 rounded hover:bg-gray-200 transition-colors"
@@ -231,6 +522,7 @@ function ToolbarPlugin({ isUrdu }) {
 
       <div className="w-px h-6 bg-gray-300 mx-1"></div>
 
+      {/* Lists */}
       <button
         onClick={formatBulletList}
         className="p-2 rounded hover:bg-gray-200 transition-colors"
@@ -248,6 +540,7 @@ function ToolbarPlugin({ isUrdu }) {
 
       <div className="w-px h-6 bg-gray-300 mx-1"></div>
 
+      {/* Quote + Link */}
       <button
         onClick={formatQuote}
         className="p-2 rounded hover:bg-gray-200 transition-colors"
@@ -261,6 +554,48 @@ function ToolbarPlugin({ isUrdu }) {
         aria-label="Insert Link"
       >
         <FaLink size={16} />
+      </button>
+
+      {/* 🔴 Alignment controls with active state */}
+      <div className="w-px h-6 bg-gray-300 mx-1"></div>
+
+      <button
+        onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "left")}
+        className={`p-2 rounded hover:bg-gray-200 transition-colors ${
+          blockAlignment === "left" ? "bg-gray-300" : ""
+        }`}
+        aria-label="Align Left"
+      >
+        <FaAlignLeft size={16} />
+      </button>
+      <button
+        onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "center")}
+        className={`p-2 rounded hover:bg-gray-200 transition-colors ${
+          blockAlignment === "center" ? "bg-gray-300" : ""
+        }`}
+        aria-label="Align Center"
+      >
+        <FaAlignCenter size={16} />
+      </button>
+      <button
+        onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "right")}
+        className={`p-2 rounded hover:bg-gray-200 transition-colors ${
+          blockAlignment === "right" ? "bg-gray-300" : ""
+        }`}
+        aria-label="Align Right"
+      >
+        <FaAlignRight size={16} />
+      </button>
+      <button
+        onClick={() =>
+          editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "justify")
+        }
+        className={`p-2 rounded hover:bg-gray-200 transition-colors ${
+          blockAlignment === "justify" ? "bg-gray-300" : ""
+        }`}
+        aria-label="Justify"
+      >
+        <FaAlignJustify size={16} />
       </button>
 
       {isUrdu && (
@@ -327,58 +662,6 @@ export default function LexicalEditor({
   onContentChange,
   placeholder,
 }) {
-  // const [currentTab, setCurrentTab] = useState(activeTab);
-
-  // Handle content changes for English
-  // const handleEnglishChange = useCallback(
-  //   (editorState) => {
-  //     const jsonString = JSON.stringify(editorState.toJSON());
-  //     onEnglishChange(jsonString);
-  //   },
-  //   [onEnglishChange]
-  // );
-
-  // Handle content changes for Urdu
-  // const handleUrduChange = useCallback(
-  //   (editorState) => {
-  //     const jsonString = JSON.stringify(editorState.toJSON());
-  //     onUrduChange(jsonString);
-  //   },
-  //   [onUrduChange]
-  // );
-
-  // Create initial config for English
-  // const englishConfig = {
-  //   namespace: "EnglishEditor",
-  //   nodes: [
-  //     HeadingNode,
-  //     ListNode,
-  //     ListItemNode,
-  //     QuoteNode,
-  //     AutoLinkNode,
-  //     LinkNode,
-  //   ],
-  //   theme: createEditorTheme(false),
-  //   onError: (error) => console.error(error),
-  //   editorState: englishContent ? englishContent : undefined,
-  // };
-
-  // Create initial config for Urdu
-  // const urduConfig = {
-  //   namespace: "UrduEditor",
-  //   nodes: [
-  //     HeadingNode,
-  //     ListNode,
-  //     ListItemNode,
-  //     QuoteNode,
-  //     AutoLinkNode,
-  //     LinkNode,
-  //   ],
-  //   theme: createEditorTheme(true),
-  //   onError: (error) => console.error(error),
-  //   editorState: urduContent ? urduContent : undefined,
-  // };
-
   const config = {
     namespace: language === "urdu" ? "UrduEditor" : "EnglishEditor",
     nodes: [
@@ -399,110 +682,6 @@ export default function LexicalEditor({
   // };
 
   return (
-    // <div className="w-full max-w-4xl mx-auto">
-
-    //   <div className="flex border-b border-gray-200 mb-4">
-    //     <button
-    //       onClick={() => setCurrentTab("english")}
-    //       className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${
-    //         currentTab === "english"
-    //           ? "border-blue-500 text-blue-600"
-    //           : "border-transparent text-gray-500 hover:text-gray-700"
-    //       }`}
-    //     >
-    //       English
-    //     </button>
-    //     <button
-    //       onClick={() => setCurrentTab("urdu")}
-    //       className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${
-    //         currentTab === "urdu"
-    //           ? "border-blue-500 text-blue-600"
-    //           : "border-transparent text-gray-500 hover:text-gray-700"
-    //       }`}
-    //     >
-    //       اردو (Urdu)
-    //     </button>
-    //   </div>
-
-    //   {currentTab === "english" && (
-    //     <LexicalComposer initialConfig={englishConfig}>
-    //       <div className="border border-gray-300 rounded-lg shadow-sm bg-white">
-    //         <ToolbarPlugin isUrdu={false} />
-    //         <div className="relative min-h-96">
-    //           <RichTextPlugin
-    //             contentEditable={
-    //               <ContentEditable className="min-h-96 p-4 focus:outline-none" />
-    //             }
-    //             placeholder={
-    //               <div className="absolute top-4 left-4 text-gray-400 pointer-events-none">
-    //                 Write your content in English...
-    //               </div>
-    //             }
-    //             ErrorBoundary={LexicalErrorBoundary}
-    //           />
-    //           <HistoryPlugin />
-    //           <AutoFocusPlugin />
-    //           <ListPlugin />
-    //           <LinkPlugin />
-    //           <OnChangePlugin
-    //             onChange={(editorState) => {
-    //               onContentChange(JSON.stringify(editorState.toJSON()));
-    //             }}
-    //           />
-    //         </div>
-    //       </div>
-    //     </LexicalComposer>
-    //   )}
-
-    //   {currentTab === "urdu" && (
-    //     <LexicalComposer initialConfig={urduConfig}>
-    //       <div className="border border-gray-300 rounded-lg shadow-sm bg-white">
-    //         <ToolbarPlugin isUrdu={true} />
-    //         <div className="relative min-h-96">
-    //           <RichTextPlugin
-    //             contentEditable={
-    //               <ContentEditable
-    //                 className="min-h-96 p-4 focus:outline-none text-right font-urdu"
-    //                 dir="rtl"
-    //                 style={{
-    //                   fontFamily: "Noto Nastaliq Urdu, Arial, sans-serif",
-    //                 }}
-    //               />
-    //             }
-    //             placeholder={
-    //               <div
-    //                 className="absolute top-4 right-4 text-gray-400 pointer-events-none text-right"
-    //                 dir="rtl"
-    //               >
-    //                 اردو میں لکھیں...
-    //               </div>
-    //             }
-    //             ErrorBoundary={LexicalErrorBoundary}
-    //           />
-    //           <HistoryPlugin />
-    //           <AutoFocusPlugin />
-    //           <ListPlugin />
-    //           <LinkPlugin />
-    //           <OnChangePlugin
-    //             onChange={(editorState) => {
-    //               onContentChange(JSON.stringify(editorState.toJSON()));
-    //             }}
-    //           />
-
-    //           {/* Urdu Keyboard Button */}
-    //           {/* <div className="absolute top-2 right-2">
-    //             <button
-    //               onClick={showUrduKeyboard}
-    //               className="px-2 py-1 bg-gray-100 text-xs rounded border hover:bg-gray-200 transition-colors"
-    //             >
-    //               Urdu Keyboard
-    //             </button>
-    //           </div> */}
-    //         </div>
-    //       </div>
-    //     </LexicalComposer>
-    //   )}
-    // </div>
     <LexicalComposer initialConfig={config}>
       <div className="border border-gray-300 rounded-lg shadow-sm bg-white">
         <ToolbarPlugin isUrdu={language === "urdu"} />
