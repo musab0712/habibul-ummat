@@ -1,6 +1,7 @@
+// components/admin/LexicalEditor.jsx
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
@@ -20,17 +21,17 @@ import {
   FORMAT_TEXT_COMMAND,
   REDO_COMMAND,
   UNDO_COMMAND,
-  $getRoot,
   $isTextNode,
   $createTextNode,
   createCommand,
   COMMAND_PRIORITY_EDITOR,
   FORMAT_ELEMENT_COMMAND,
 } from "lexical";
-import { $createHeadingNode, $createQuoteNode } from "@lexical/rich-text";
 import { $setBlocksType } from "@lexical/selection";
+import { $createHeadingNode, $createQuoteNode } from "@lexical/rich-text";
 import { $createListItemNode, $createListNode } from "@lexical/list";
 import { $createLinkNode } from "@lexical/link";
+
 import {
   FaBold,
   FaItalic,
@@ -51,268 +52,9 @@ import {
   FaAlignJustify,
 } from "react-icons/fa";
 
-// Toolbar Component
-// function ToolbarPlugin({ isUrdu }) {
-//   const [editor] = useLexicalComposerContext();
-//   const [isBold, setIsBold] = useState(false);
-//   const [isItalic, setIsItalic] = useState(false);
-//   const [isUnderline, setIsUnderline] = useState(false);
-//   const [isStrikethrough, setIsStrikethrough] = useState(false);
-
-//   const updateToolbar = () => {
-//     const selection = $getSelection();
-//     if ($isRangeSelection(selection)) {
-//       setIsBold(selection.hasFormat("bold"));
-//       setIsItalic(selection.hasFormat("italic"));
-//       setIsUnderline(selection.hasFormat("underline"));
-//       setIsStrikethrough(selection.hasFormat("strikethrough"));
-//     }
-//   };
-
-//   useEffect(() => {
-//     return editor.registerUpdateListener(({ editorState }) => {
-//       editorState.read(() => {
-//         updateToolbar();
-//       });
-//     });
-//   }, [editor]);
-
-//   const formatParagraph = () => {
-//     editor.update(() => {
-//       const selection = $getSelection();
-//       if ($isRangeSelection(selection)) {
-//         $setBlocksType(selection, () => $createParagraphNode());
-//       }
-//     });
-//   };
-
-//   const formatHeading = (headingSize) => {
-//     editor.update(() => {
-//       const selection = $getSelection();
-//       if ($isRangeSelection(selection)) {
-//         $setBlocksType(selection, () => $createHeadingNode(headingSize));
-//       }
-//     });
-//   };
-
-//   const formatBulletList = () => {
-//     editor.update(() => {
-//       const selection = $getSelection();
-//       if ($isRangeSelection(selection)) {
-//         const listNode = $createListNode("bullet");
-//         const listItemNode = $createListItemNode();
-//         listItemNode.append($createParagraphNode());
-//         listNode.append(listItemNode);
-//         selection.insertNodes([listNode]);
-//       }
-//     });
-//   };
-
-//   const formatNumberedList = () => {
-//     editor.update(() => {
-//       const selection = $getSelection();
-//       if ($isRangeSelection(selection)) {
-//         const listNode = $createListNode("number");
-//         const listItemNode = $createListItemNode();
-//         listItemNode.append($createParagraphNode());
-//         listNode.append(listItemNode);
-//         selection.insertNodes([listNode]);
-//       }
-//     });
-//   };
-
-//   const formatQuote = () => {
-//     editor.update(() => {
-//       const selection = $getSelection();
-//       if ($isRangeSelection(selection)) {
-//         $setBlocksType(selection, () => $createQuoteNode());
-//       }
-//     });
-//   };
-
-//   const insertLink = () => {
-//     const url = prompt("Enter URL:");
-//     if (url === null) return;
-
-//     editor.update(() => {
-//       const selection = $getSelection();
-//       if ($isRangeSelection(selection)) {
-//         const linkNode = $createLinkNode(url);
-//         const textNode = $createTextNode(url);
-//         linkNode.append(textNode);
-//         selection.insertNodes([linkNode]);
-//       }
-//     });
-//   };
-
-//   return (
-//     <div className="flex flex-wrap items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg">
-//       <button
-//         onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}
-//         className="p-2 rounded hover:bg-gray-200 transition-colors"
-//         aria-label="Undo"
-//       >
-//         <FaUndo size={16} />
-//       </button>
-//       <button
-//         onClick={() => editor.dispatchCommand(REDO_COMMAND, undefined)}
-//         className="p-2 rounded hover:bg-gray-200 transition-colors"
-//         aria-label="Redo"
-//       >
-//         <FaRedo size={16} />
-//       </button>
-
-//       <div className="w-px h-6 bg-gray-300 mx-1"></div>
-
-//       <button
-//         onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold")}
-//         className={`p-2 rounded hover:bg-gray-200 transition-colors ${
-//           isBold ? "bg-gray-300" : ""
-//         }`}
-//         aria-label="Format Bold"
-//       >
-//         <FaBold size={16} />
-//       </button>
-//       <button
-//         onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic")}
-//         className={`p-2 rounded hover:bg-gray-200 transition-colors ${
-//           isItalic ? "bg-gray-300" : ""
-//         }`}
-//         aria-label="Format Italics"
-//       >
-//         <FaItalic size={16} />
-//       </button>
-//       <button
-//         onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline")}
-//         className={`p-2 rounded hover:bg-gray-200 transition-colors ${
-//           isUnderline ? "bg-gray-300" : ""
-//         }`}
-//         aria-label="Format Underline"
-//       >
-//         <FaUnderline size={16} />
-//       </button>
-//       <button
-//         onClick={() =>
-//           editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough")
-//         }
-//         className={`p-2 rounded hover:bg-gray-200 transition-colors ${
-//           isStrikethrough ? "bg-gray-300" : ""
-//         }`}
-//         aria-label="Format Strikethrough"
-//       >
-//         <FaStrikethrough size={16} />
-//       </button>
-
-//       <div className="w-px h-6 bg-gray-300 mx-1"></div>
-
-//       <button
-//         onClick={formatParagraph}
-//         className="p-2 rounded hover:bg-gray-200 transition-colors"
-//         aria-label="Paragraph"
-//       >
-//         <FaParagraph size={16} />
-//       </button>
-//       <button
-//         onClick={() => formatHeading("h1")}
-//         className="p-2 rounded hover:bg-gray-200 transition-colors"
-//         aria-label="Heading 1"
-//       >
-//         <FaHeading size={16} />
-//       </button>
-//       <button
-//         onClick={() => formatHeading("h2")}
-//         className="p-2 rounded hover:bg-gray-200 transition-colors"
-//         aria-label="Heading 2"
-//       >
-//         <span className="text-xs font-bold">H2</span>
-//       </button>
-//       <button
-//         onClick={() => formatHeading("h3")}
-//         className="p-2 rounded hover:bg-gray-200 transition-colors"
-//         aria-label="Heading 3"
-//       >
-//         <span className="text-xs font-bold">H3</span>
-//       </button>
-
-//       <div className="w-px h-6 bg-gray-300 mx-1"></div>
-
-//       <button
-//         onClick={formatBulletList}
-//         className="p-2 rounded hover:bg-gray-200 transition-colors"
-//         aria-label="Bullet List"
-//       >
-//         <FaListUl size={16} />
-//       </button>
-//       <button
-//         onClick={formatNumberedList}
-//         className="p-2 rounded hover:bg-gray-200 transition-colors"
-//         aria-label="Numbered List"
-//       >
-//         <FaListOl size={16} />
-//       </button>
-
-//       <div className="w-px h-6 bg-gray-300 mx-1"></div>
-
-//       <button
-//         onClick={formatQuote}
-//         className="p-2 rounded hover:bg-gray-200 transition-colors"
-//         aria-label="Quote"
-//       >
-//         <FaQuoteRight size={16} />
-//       </button>
-//       <button
-//         onClick={insertLink}
-//         className="p-2 rounded hover:bg-gray-200 transition-colors"
-//         aria-label="Insert Link"
-//       >
-//         <FaLink size={16} />
-//       </button>
-
-//       <div className="w-px h-6 bg-gray-300 mx-1"></div>
-
-//       <button
-//         onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "left")}
-//         className="p-2 rounded hover:bg-gray-200 transition-colors"
-//         aria-label="Align Left"
-//       >
-//         <FaAlignLeft size={16} />
-//       </button>
-//       <button
-//         onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "center")}
-//         className="p-2 rounded hover:bg-gray-200 transition-colors"
-//         aria-label="Align Center"
-//       >
-//         <FaAlignCenter size={16} />
-//       </button>
-//       <button
-//         onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "right")}
-//         className="p-2 rounded hover:bg-gray-200 transition-colors"
-//         aria-label="Align Right"
-//       >
-//         <FaAlignRight size={16} />
-//       </button>
-//       <button
-//         onClick={() =>
-//           editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "justify")
-//         }
-//         className="p-2 rounded hover:bg-gray-200 transition-colors"
-//         aria-label="Justify"
-//       >
-//         <FaAlignJustify size={16} />
-//       </button>
-
-//       {isUrdu && (
-//         <>
-//           <div className="w-px h-6 bg-gray-300 mx-1"></div>
-//           <div className="flex items-center gap-2 text-xs text-gray-600">
-//             <FaLanguage size={14} />
-//             <span>اردو</span>
-//           </div>
-//         </>
-//       )}
-//     </div>
-//   );
-// }
+/* =========================
+   ToolbarPlugin (FULL)
+   ========================= */
 function ToolbarPlugin({ isUrdu }) {
   const [editor] = useLexicalComposerContext();
 
@@ -320,34 +62,53 @@ function ToolbarPlugin({ isUrdu }) {
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderline, setIsUnderline] = useState(false);
   const [isStrikethrough, setIsStrikethrough] = useState(false);
-  const [blockAlignment, setBlockAlignment] = useState("left"); // 🔴 NEW
+  const [blockAlignment, setBlockAlignment] = useState("left");
+  const [fontSize, setFontSize] = useState("16"); // toolbar default
 
   const updateToolbar = () => {
     const selection = $getSelection();
 
     if ($isRangeSelection(selection)) {
-      // Text formatting (tumhara purana code)
       setIsBold(selection.hasFormat("bold"));
       setIsItalic(selection.hasFormat("italic"));
       setIsUnderline(selection.hasFormat("underline"));
       setIsStrikethrough(selection.hasFormat("strikethrough"));
 
-      // 🔴 NEW: Block alignment detect
-      const anchorNode = selection.anchor.getNode();
-      const topLevelElement = anchorNode.getTopLevelElementOrThrow();
-
-      if (
-        topLevelElement &&
-        typeof topLevelElement.getFormatType === "function"
-      ) {
-        const formatType = topLevelElement.getFormatType(); // 'left' | 'center' | 'right' | 'justify' | ''
-        if (!formatType || formatType === "left") {
-          setBlockAlignment("left");
-        } else {
-          setBlockAlignment(formatType);
-        }
-      } else {
+      // Detect alignment from top-level element if possible
+      try {
+        const anchorNode = selection.anchor.getNode();
+        const topLevel = anchorNode.getTopLevelElementOrThrow();
+        const fmt =
+          topLevel && typeof topLevel.getFormatType === "function"
+            ? topLevel.getFormatType()
+            : "";
+        setBlockAlignment(!fmt || fmt === "left" ? "left" : fmt);
+      } catch {
         setBlockAlignment("left");
+      }
+
+      // Detect font-size from selection (first text node with style)
+      try {
+        const nodes = selection.getNodes ? selection.getNodes() : [];
+        let found = null;
+        for (const n of nodes) {
+          if ($isTextNode(n)) {
+            const style =
+              typeof n.getStyle === "function"
+                ? n.getStyle() || ""
+                : n.style || "";
+            if (style) {
+              const m = style.match(/font-size\s*:\s*([0-9]+)px/);
+              if (m) {
+                found = m[1];
+                break;
+              }
+            }
+          }
+        }
+        setFontSize(found ?? "16");
+      } catch {
+        setFontSize("16");
       }
     }
   };
@@ -360,6 +121,7 @@ function ToolbarPlugin({ isUrdu }) {
     });
   }, [editor]);
 
+  // Block helpers
   const formatParagraph = () => {
     editor.update(() => {
       const selection = $getSelection();
@@ -415,8 +177,7 @@ function ToolbarPlugin({ isUrdu }) {
 
   const insertLink = () => {
     const url = prompt("Enter URL:");
-    if (url === null) return;
-
+    if (!url) return;
     editor.update(() => {
       const selection = $getSelection();
       if ($isRangeSelection(selection)) {
@@ -424,6 +185,61 @@ function ToolbarPlugin({ isUrdu }) {
         const textNode = $createTextNode(url);
         linkNode.append(textNode);
         selection.insertNodes([linkNode]);
+      }
+    });
+  };
+
+  // Apply font-size to selected text nodes (live)
+  const applyFontSize = (size) => {
+    setFontSize(size);
+    editor.update(() => {
+      const selection = $getSelection();
+      if (!$isRangeSelection(selection)) return;
+
+      const nodes = selection.getNodes ? selection.getNodes() : [];
+
+      const applyToTextNode = (textNode) => {
+        if (typeof textNode.setStyle === "function") {
+          const prev =
+            typeof textNode.getStyle === "function"
+              ? textNode.getStyle() || ""
+              : textNode.style || "";
+          const stripped = prev
+            .replace(/font-size\s*:\s*[0-9]+px;?/g, "")
+            .trim();
+          const newStyle =
+            (stripped ? stripped + ";" : "") + `font-size:${size}px;`;
+          try {
+            textNode.setStyle(newStyle);
+          } catch {
+            textNode.style = newStyle;
+          }
+        } else {
+          textNode.style = textNode.style
+            ? textNode.style.replace(/font-size\s*:[^;]+;?/g, "")
+            : "";
+          textNode.style =
+            (textNode.style ? textNode.style + ";" : "") +
+            `font-size:${size}px;`;
+        }
+      };
+
+      for (const node of nodes) {
+        if ($isTextNode(node)) {
+          applyToTextNode(node);
+        } else if (node.children && node.children.length) {
+          // walk children recursively
+          const walk = (children) => {
+            for (const ch of children) {
+              if ($isTextNode(ch)) {
+                applyToTextNode(ch);
+              } else if (ch.children && ch.children.length) {
+                walk(ch.children);
+              }
+            }
+          };
+          walk(node.children);
+        }
       }
     });
   };
@@ -556,7 +372,7 @@ function ToolbarPlugin({ isUrdu }) {
         <FaLink size={16} />
       </button>
 
-      {/* 🔴 Alignment controls with active state */}
+      {/* Alignment */}
       <div className="w-px h-6 bg-gray-300 mx-1"></div>
 
       <button
@@ -598,6 +414,23 @@ function ToolbarPlugin({ isUrdu }) {
         <FaAlignJustify size={16} />
       </button>
 
+      {/* Font size selector */}
+      <div className="flex items-center ml-2">
+        <label className="sr-only">Font size</label>
+        <select
+          value={fontSize}
+          onChange={(e) => applyFontSize(e.target.value)}
+          className="text-sm border px-2 py-1 rounded-md bg-white"
+          aria-label="Font size"
+        >
+          {Array.from({ length: 16 }, (_, i) => 10 + i).map((n) => (
+            <option key={n} value={String(n)}>
+              {n}px
+            </option>
+          ))}
+        </select>
+      </div>
+
       {isUrdu && (
         <>
           <div className="w-px h-6 bg-gray-300 mx-1"></div>
@@ -611,20 +444,25 @@ function ToolbarPlugin({ isUrdu }) {
   );
 }
 
-// Content Change Plugin
+/* =========================
+   OnChangePlugin
+   ========================= */
 function OnChangePlugin({ onChange }) {
   const [editor] = useLexicalComposerContext();
 
   useEffect(() => {
     return editor.registerUpdateListener(({ editorState }) => {
-      onChange(editorState);
+      // Forward the EditorState object to parent (parent expects editorState.toJSON())
+      onChange && onChange(editorState);
     });
   }, [editor, onChange]);
 
   return null;
 }
 
-// Editor Theme with RTL support
+/* =========================
+   Editor Theme
+   ========================= */
 const createEditorTheme = (isUrdu) => ({
   text: {
     bold: "font-bold",
@@ -655,12 +493,14 @@ const createEditorTheme = (isUrdu) => ({
     : "border-l-4 border-gray-300 pl-4 my-2 italic",
 });
 
-// Main Bilingual Editor Component
+/* =========================
+   Main LexicalEditor Component
+   ========================= */
 export default function LexicalEditor({
-  language,
+  language = "english",
   initialContent,
   onContentChange,
-  placeholder,
+  placeholder = "Write something...",
 }) {
   const config = {
     namespace: language === "urdu" ? "UrduEditor" : "EnglishEditor",
@@ -676,10 +516,6 @@ export default function LexicalEditor({
     onError: (error) => console.error(error),
     editorState: initialContent ? initialContent : undefined,
   };
-
-  // const showUrduKeyboard = () => {
-  //   alert("Urdu keyboard functionality would be implemented here");
-  // };
 
   return (
     <LexicalComposer initialConfig={config}>
@@ -718,9 +554,9 @@ export default function LexicalEditor({
           <LinkPlugin />
           <OnChangePlugin
             onChange={(editorState) => {
-              if (onContentChange) {
-                onContentChange(editorState);
-              }
+              // Parent previously expected to call editorState.toJSON()
+              // We forward editorState object straight through.
+              if (onContentChange) onContentChange(editorState);
             }}
           />
         </div>
@@ -729,178 +565,59 @@ export default function LexicalEditor({
   );
 }
 
-// Example usage component showing how to integrate with your existing form
-export function AboutUsEditor() {
-  const [englishContent, setEnglishContent] = useState(null);
-  const [urduContent, setUrduContent] = useState(null);
-  const [activeTab, setActiveTab] = useState("english");
-
-  // Convert editor state to HTML for database storage
-  const convertToHTML = (editorStateJSON) => {
-    if (!editorStateJSON) return "";
-    // This is a simplified conversion - you might want to use a more robust solution
-    // For production, consider using @lexical/html or similar
-    try {
-      const state = JSON.parse(editorStateJSON);
-      // You can implement a proper JSON to HTML converter here
-      // For now, returning the JSON string - replace with actual HTML conversion
-      return editorStateJSON;
-    } catch (error) {
-      console.error("Error converting to HTML:", error);
-      return "";
-    }
-  };
-
-  // Convert editor state to plain text for database storage
-  const convertToPlainText = (editorStateJSON) => {
-    if (!editorStateJSON) return "";
-    try {
-      const state = JSON.parse(editorStateJSON);
-      // Extract plain text from the editor state
-      // This is a simplified extraction - implement based on your needs
-      const extractText = (node) => {
-        if (node.type === "text") {
-          return node.text || "";
-        }
-        if (node.children) {
-          return node.children.map(extractText).join("");
-        }
-        return "";
-      };
-
-      if (state.root && state.root.children) {
-        return state.root.children.map(extractText).join("\n");
-      }
-      return "";
-    } catch (error) {
-      console.error("Error converting to plain text:", error);
-      return "";
-    }
-  };
-
-  // Function to save content to database
-  const saveToDatabase = async () => {
-    const dataToSave = {
-      english: {
-        json: englishContent,
-        html: convertToHTML(englishContent),
-        plainText: convertToPlainText(englishContent),
-      },
-      urdu: {
-        json: urduContent,
-        html: convertToHTML(urduContent),
-        plainText: convertToPlainText(urduContent),
-      },
-    };
-
-    try {
-      // Replace this with your actual API call
-      console.log("Saving to database:", dataToSave);
-
-      // Example API call:
-      // const response = await fetch('/api/about-us', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify(dataToSave),
-      // });
-
-      alert("Content saved successfully!");
-    } catch (error) {
-      console.error("Error saving content:", error);
-      alert("Error saving content. Please try again.");
-    }
-  };
-
-  // Function to load content from database
-  const loadFromDatabase = async () => {
-    try {
-      // Replace this with your actual API call
-      // const response = await fetch('/api/about-us');
-      // const data = await response.json();
-
-      // Example of loading data:
-      // setEnglishContent(data.english.json);
-      // setUrduContent(data.urdu.json);
-
-      console.log("Load from database function called");
-    } catch (error) {
-      console.error("Error loading content:", error);
-    }
-  };
-
+/* =========================
+   BilingualLexicalEditor (helper wrapper)
+   =========================
+   This is added because your AboutUsEditor used <BilingualLexicalEditor />
+   This wrapper renders two LexicalEditor instances and connects them with props
+   so you can directly paste into your project without extra edits.
+   ========================= */
+export function BilingualLexicalEditor({
+  englishContent,
+  urduContent,
+  onEnglishChange,
+  onUrduChange,
+  activeTab = "english",
+}) {
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      {/* <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">
-          About Us Content Editor
-        </h1>
-        <p className="text-gray-600">
-          Create and edit your about us content in both English and Urdu.
-        </p>
-      </div> */}
-
-      <BilingualLexicalEditor
-        englishContent={englishContent}
-        urduContent={urduContent}
-        onEnglishChange={setEnglishContent}
-        onUrduChange={setUrduContent}
-        activeTab={activeTab}
-      />
-
-      {/* Save/Load Controls */}
-      <div className="mt-6 flex gap-4">
-        <button
-          onClick={saveToDatabase}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          Save to Database
-        </button>
-        <button
-          onClick={loadFromDatabase}
-          className="px-6 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
-        >
-          Load from Database
-        </button>
+    <div>
+      {/* Show both editors but hide inactive with CSS (keeps state) */}
+      <div style={{ display: activeTab === "english" ? "block" : "none" }}>
+        <LexicalEditor
+          language="english"
+          initialContent={englishContent}
+          onContentChange={(editorState) => {
+            // parent previously expected JSON string of content.toJSON()
+            try {
+              const json = editorState.toJSON
+                ? editorState.toJSON()
+                : editorState;
+              onEnglishChange && onEnglishChange(JSON.stringify(json));
+            } catch (e) {
+              // fallback
+              onEnglishChange && onEnglishChange(JSON.stringify(editorState));
+            }
+          }}
+          placeholder="Write your about us content in English..."
+        />
       </div>
 
-      {/* Content preview info */}
-      <div className="mt-4 p-3 bg-gray-50 rounded-md">
-        <p className="text-sm text-gray-600">
-          <strong>Tip:</strong> Use the toolbar above to format your content.
-          The content is automatically saved as structured data that preserves
-          all formatting when displayed on your website.
-        </p>
-
-        <p className="text-sm text-gray-600 mt-2" dir="rtl">
-          <strong>نوٹ:</strong> اردو کنٹینٹ خودکار طور پر دائیں سے بائیں (RTL)
-          فارمیٹ میں محفوظ ہوگا۔
-        </p>
-      </div>
-
-      {/* Debug Info */}
-      <div className="mt-6 space-y-4">
-        <div className="p-4 bg-gray-50 rounded-lg">
-          <h3 className="font-medium text-gray-700 mb-2">
-            English Content (JSON):
-          </h3>
-          <pre className="bg-gray-100 p-3 rounded-md overflow-x-auto text-sm max-h-32">
-            {englishContent
-              ? JSON.stringify(JSON.parse(englishContent), null, 2)
-              : "No content"}
-          </pre>
-        </div>
-        <div className="p-4 bg-gray-50 rounded-lg">
-          <h3 className="font-medium text-gray-700 mb-2">
-            Urdu Content (JSON):
-          </h3>
-          <pre className="bg-gray-100 p-3 rounded-md overflow-x-auto text-sm max-h-32">
-            {urduContent
-              ? JSON.stringify(JSON.parse(urduContent), null, 2)
-              : "No content"}
-          </pre>
-        </div>
+      <div style={{ display: activeTab === "urdu" ? "block" : "none" }}>
+        <LexicalEditor
+          language="urdu"
+          initialContent={urduContent}
+          onContentChange={(editorState) => {
+            try {
+              const json = editorState.toJSON
+                ? editorState.toJSON()
+                : editorState;
+              onUrduChange && onUrduChange(JSON.stringify(json));
+            } catch (e) {
+              onUrduChange && onUrduChange(JSON.stringify(editorState));
+            }
+          }}
+          placeholder="اردو میں اپنا مواد لکھیں..."
+        />
       </div>
     </div>
   );

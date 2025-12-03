@@ -112,141 +112,188 @@ const JamiaMuhajjabpurPage = () => {
   ];
 
   // Enhanced Lexical JSON to HTML converter function
+  // Put this function in app/[lang]/about/page.jsx (replace existing lexicalJsonToHtml)
   function lexicalJsonToHtml(jsonString) {
     if (!jsonString) return "";
+    // If caller passed already-parsed object, accept it
+    let state;
     try {
-      const state = JSON.parse(jsonString);
+      state =
+        typeof jsonString === "string" ? JSON.parse(jsonString) : jsonString;
+    } catch (error) {
+      console.error("lexicalJsonToHtml: invalid JSON", error);
+      return "";
+    }
 
-      const getAlignmentClass = (format) => {
-        if (!format) return "";
-        if (format === "center") return "text-center";
-        if (format === "right") return "text-right";
-        if (format === "justify") return "text-justify";
-        if (format === "left") return "text-left";
-        return "";
-      };
+    // helper: escape text to avoid XSS
+    function escapeHtml(unsafe = "") {
+      return String(unsafe)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
 
-      const renderNode = (node) => {
-        // Handle paragraph nodes
-        // if (node.type === "paragraph") {
-        //   return `<p class="mb-6 text-gray-700 leading-relaxed text-lg">${
-        //     node.children?.map(renderNode).join("") || ""
-        //   }</p>`;
-        // }
-        if (node.type === "paragraph") {
-          const alignClass = getAlignmentClass(node.format);
-          const baseClasses = "mb-6 text-gray-700 leading-relaxed text-lg";
-          const classes = alignClass
-            ? `${baseClasses} ${alignClass}`
-            : baseClasses;
+    // helper: return tailwind alignment class for block format string
+    function getAlignmentClass(format) {
+      if (!format) return "";
+      if (format === "center") return "text-center";
+      if (format === "right") return "text-right";
+      if (format === "justify") return "text-justify";
+      if (format === "left") return "text-left";
+      return "";
+    }
 
-          return `<p class="${classes}">${
-            node.children?.map(renderNode).join("") || ""
-          }</p>`;
-        }
+    // helper: sanitize style string and keep only allowed declarations (currently only font-size)
+    function sanitizeStyle(styleString = "") {
+      if (!styleString || typeof styleString !== "string") return "";
+      // split declarations, keep only font-size declarations
+      const parts = styleString
+        .split(";")
+        .map((s) => s.trim())
+        .filter(Boolean);
+      const kept = parts.filter((decl) => {
+        // allow only font-size (px, em, rem, %). adjust if you want more.
+        return /^font-size\s*:\s*[\d.]+(px|em|rem|%)$/i.test(decl);
+      });
+      return kept.join("; ");
+    }
 
-        // Handle heading nodes
-        if (node.type === "heading") {
-          const level = node.tag || "h2";
-          const validTags = ["h1", "h2", "h3", "h4", "h5", "h6"];
-          const headingTag = validTags.includes(level) ? level : "h2";
+    // render functions for node types
+    function renderNode(node) {
+      if (!node || typeof node !== "object") return "";
 
-          const tailwindClasses = {
-            h1: "text-5xl font-bold mt-12 mb-6 text-emerald-800 text-center",
-            h2: "text-4xl font-bold mt-10 mb-5 text-emerald-800 text-center",
-            h3: "text-3xl font-bold mt-8 mb-4 text-emerald-800 text-center",
-            h4: "text-2xl font-bold mt-6 mb-3 text-emerald-800 text-center",
-            h5: "text-xl font-bold mt-4 mb-2 text-emerald-800 text-center",
-            h6: "text-lg font-bold mt-3 mb-2 text-emerald-800 text-center",
-          };
+      // ---------- Paragraph ----------
+      if (node.type === "paragraph") {
+        const alignClass = getAlignmentClass(node.format);
+        const baseClasses = "mb-6 text-gray-700 leading-relaxed text-lg";
+        const classes = alignClass
+          ? `${baseClasses} ${alignClass}`
+          : baseClasses;
+        const inner = (node.children || []).map(renderNode).join("");
+        return `<p class="${classes}">${inner}</p>`;
+      }
 
-          // const classes = tailwindClasses[headingTag] || tailwindClasses.h2;
-          const decoration = "";
+      // ---------- Heading ----------
+      if (node.type === "heading") {
+        const level = node.tag || "h2";
+        const validTags = ["h1", "h2", "h3", "h4", "h5", "h6"];
+        const headingTag = validTags.includes(level) ? level : "h2";
 
-          // return `<${headingTag} class="${classes}">${
-          //   node.children?.map(renderNode).join("") || ""
-          // }${decoration}</${headingTag}>`;
-          const alignClass = getAlignmentClass(node.format);
-          const baseClasses = tailwindClasses[headingTag] || tailwindClasses.h2;
-          const classes = alignClass
-            ? `${baseClasses} ${alignClass}`
-            : baseClasses;
+        const tailwindClasses = {
+          h1: "text-5xl font-bold mt-12 mb-6 text-emerald-800 ",
+          h2: "text-4xl font-bold mt-10 mb-5 text-emerald-800 ",
+          h3: "text-3xl font-bold mt-8 mb-4 text-emerald-800 ",
+          h4: "text-2xl font-bold mt-6 mb-3 text-emerald-800 ",
+          h5: "text-xl font-bold mt-4 mb-2 text-emerald-800 ",
+          h6: "text-lg font-bold mt-3 mb-2 text-emerald-800",
+        };
 
-          return `<${headingTag} class="${classes}">${
-            node.children?.map(renderNode).join("") || ""
-          }${decoration}</${headingTag}>`;
-        }
+        const alignClass = getAlignmentClass(node.format);
+        const baseClasses = tailwindClasses[headingTag] || tailwindClasses.h2;
+        const classes = alignClass
+          ? `${baseClasses} ${alignClass}`
+          : baseClasses;
 
-        // Handle list nodes
-        if (node.type === "list") {
-          const listTag = node.tag === "ol" ? "ol" : "ul";
-          const listClasses =
-            listTag === "ol"
-              ? "mb-6 pl-8 space-y-2 list-decimal text-gray-700"
-              : "mb-6 pl-8 space-y-2 list-disc text-gray-700";
+        const inner = (node.children || []).map(renderNode).join("");
+        return `<${headingTag} class="${classes}">${inner}</${headingTag}>`;
+      }
 
-          return `<${listTag} class="${listClasses}">${
-            node.children?.map(renderNode).join("") || ""
-          }</${listTag}>`;
-        }
+      // ---------- List ----------
+      if (node.type === "list") {
+        // node.tag might be "ol" or "ul" in some serialization or node.listType — fallback
+        const listTag =
+          node.tag === "ol" || node.tag === "number" ? "ol" : "ul";
+        const listClasses =
+          listTag === "ol"
+            ? "mb-6 pl-8 space-y-2 list-decimal text-gray-700"
+            : "mb-6 pl-8 space-y-2 list-disc text-gray-700";
+        const inner = (node.children || []).map(renderNode).join("");
+        return `<${listTag} class="${listClasses}">${inner}</${listTag}>`;
+      }
 
-        // Handle list item nodes
-        if (node.type === "listitem") {
-          return `<li class="text-lg leading-relaxed hover:text-emerald-600 transition-colors duration-200">${
-            node.children?.map(renderNode).join("") || ""
-          }</li>`;
-        }
+      // ---------- List Item ----------
+      if (node.type === "listitem") {
+        const inner = (node.children || []).map(renderNode).join("");
+        return `<li class="text-lg leading-relaxed hover:text-emerald-600 transition-colors duration-200">${inner}</li>`;
+      }
 
-        // Handle quote nodes
-        if (node.type === "quote") {
-          return `<blockquote class="mb-8 pl-6 py-4 border-l-4 border-emerald-500 bg-emerald-50 rounded-r-lg italic text-xl text-gray-700 font-medium">${
-            node.children?.map(renderNode).join("") || ""
-          }</blockquote>`;
-        }
+      // ---------- Quote ----------
+      if (node.type === "quote") {
+        const inner = (node.children || []).map(renderNode).join("");
+        return `<blockquote class="mb-8 pl-6 py-4 border-l-4 border-emerald-500 bg-emerald-50 rounded-r-lg italic text-xl text-gray-700 font-medium">${inner}</blockquote>`;
+      }
 
-        // Handle link nodes
-        if (node.type === "link") {
-          const href = node.url || "#";
-          return `<a href="${href}" class="text-emerald-600 hover:text-emerald-800 underline decoration-2 underline-offset-2 transition-colors duration-200 font-medium" target="_blank" rel="noopener noreferrer">${
-            node.children?.map(renderNode).join("") || ""
-          }</a>`;
-        }
+      // ---------- Link ----------
+      if (node.type === "link" || node.type === "link-node") {
+        const href = node.url || node.href || "#";
+        const inner = (node.children || []).map(renderNode).join("");
+        return `<a href="${escapeHtml(
+          href
+        )}" class="text-emerald-600 hover:text-emerald-800 underline decoration-2 underline-offset-2 transition-colors duration-200 font-medium" target="_blank" rel="noopener noreferrer">${inner}</a>`;
+      }
 
-        // Handle text nodes with formatting
-        if (node.type === "text") {
-          let text = node.text || "";
+      // ---------- Text Node ----------
+      if (node.type === "text") {
+        let text = node.text || "";
 
+        // formatting bitmask (common Lexical format)
+        // 1 -> bold, 2 -> italic, 4 -> underline, 8 -> strikethrough
+        const applyFormatting = (innerText) => {
+          let out = innerText;
           if (node.format) {
+            // Important: keep order so nested tags render correctly
             if (node.format & 1)
-              text = `<strong class="font-bold text-gray-900">${text}</strong>`;
-            if (node.format & 2) text = `<em class="italic">${text}</em>`;
+              out = `<strong class="font-bold text-gray-900">${out}</strong>`;
+            if (node.format & 2) out = `<em class="italic">${out}</em>`;
             if (node.format & 4)
-              text = `<u class="underline decoration-2">${text}</u>`;
+              out = `<u class="underline decoration-2">${out}</u>`;
             if (node.format & 8)
-              text = `<s class="line-through opacity-75">${text}</s>`;
+              out = `<s class="line-through opacity-75">${out}</s>`;
           }
+          return out;
+        };
 
-          return text;
+        // Escape raw text first
+        const escaped = escapeHtml(text);
+
+        // If there's an inline style stored (e.g. "font-size:18px;"), sanitize and keep only allowed props
+        const rawStyle = node.style || node.getStyle || "";
+        const styleStr = typeof rawStyle === "string" ? rawStyle : "";
+
+        const allowedStyle = sanitizeStyle(styleStr); // e.g. "font-size:18px"
+        if (allowedStyle) {
+          const innerFormatted = applyFormatting(escaped);
+          // Inline style attribute (ensure the semicolon at end)
+          const styleAttr = allowedStyle.trim().endsWith(";")
+            ? allowedStyle
+            : allowedStyle + ";";
+          return `<span style="${escapeHtml(
+            styleAttr
+          )}">${innerFormatted}</span>`;
+        } else {
+          // No allowed inline style, just return formatted text
+          return applyFormatting(escaped);
         }
+      }
 
-        if (node.children && Array.isArray(node.children)) {
-          return node.children.map(renderNode).join("");
-        }
-
-        return "";
-      };
-
-      if (
-        state.root &&
-        state.root.children &&
-        Array.isArray(state.root.children)
-      ) {
-        return state.root.children.map(renderNode).join("");
+      // ---------- Fallback: if node has children, render them ----------
+      if (node.children && Array.isArray(node.children)) {
+        return node.children.map(renderNode).join("");
       }
 
       return "";
-    } catch (error) {
-      console.error("Error parsing Lexical JSON:", error);
+    } // end renderNode
+
+    // Build final HTML
+    try {
+      if (state.root && Array.isArray(state.root.children)) {
+        return state.root.children.map(renderNode).join("");
+      }
+      return "";
+    } catch (err) {
+      console.error("lexicalJsonToHtml: error rendering", err);
       return "";
     }
   }
