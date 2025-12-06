@@ -7,7 +7,8 @@ export async function PUT(request, { params }) {
   await dbConnect();
   try {
     const body = await request.json();
-    const book = await Book.findByIdAndUpdate(params.id, body, {
+    const { id } = await params;
+    const book = await Book.findByIdAndUpdate(id, body, {
       new: true,
       runValidators: true,
     });
@@ -29,7 +30,8 @@ export async function PUT(request, { params }) {
 export async function DELETE(request, { params }) {
   await dbConnect();
   try {
-    const deletedBook = await Book.deleteOne({ _id: params.id });
+    const { id } = await params;
+    const deletedBook = await Book.deleteOne({ _id: id });
     if (!deletedBook) {
       return NextResponse.json(
         { success: false, error: "Book not found" },

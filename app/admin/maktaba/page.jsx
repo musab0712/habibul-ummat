@@ -113,16 +113,16 @@ export default function BooksAdmin() {
     }
   };
 
-  const handleEdit = (book) => {
-    setEditingBook(book);
-    setFormData({
-      titleEnglish: book.titleEnglish || "",
-      titleUrdu: book.titleUrdu || "",
-      pdfUrl: book.pdfUrl || "",
-      coverImage: book.coverImage || "",
-    });
-    setShowForm(true);
-  };
+  // const handleEdit = (book) => {
+  //   setEditingBook(book);
+  //   setFormData({
+  //     titleEnglish: book.titleEnglish || "",
+  //     titleUrdu: book.titleUrdu || "",
+  //     pdfUrl: book.pdfUrl || "",
+  //     coverImage: book.coverImage || "",
+  //   });
+  //   setShowForm(true);
+  // };
 
   const resetForm = () => {
     setFormData({
@@ -162,88 +162,142 @@ export default function BooksAdmin() {
     });
   };
 
+  // const handlePdfUpload = async (e) => {
+  //   const file = e.target.files[0];
+  //   if (!file) return;
+
+  //   try {
+  //     // Step 1: Validate file type by MIME type
+  //     if (file.type !== "application/pdf") {
+  //       setMessage("Error: Please select a PDF file");
+  //       return;
+  //     }
+
+  //     // Step 2: Validate file size (limit to 20MB)
+  //     if (file.size > 10 * 1024 * 1024) {
+  //       setMessage("Error: PDF size should be less than 10MB");
+  //       return;
+  //     }
+
+  //     // Step 3: Validate actual PDF content
+  //     setMessage("Validating PDF file...");
+  //     await validatePdfFile(file);
+
+  //     // Step 4: Upload to Cloudinary
+  //     setMessage("Uploading PDF...");
+
+  //     const uploadData = new FormData();
+  //     uploadData.append("file", file);
+  //     uploadData.append(
+  //       "upload_preset",
+  //       process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+  //     );
+  //     uploadData.append("folder", "books");
+  //     uploadData.append("resource_type", "raw"); // Important: Use 'raw' for PDFs
+  //     // uploadData.append("access_mode", "public");
+  //     // uploadData.append("use_filename", "true");
+  //     // uploadData.append("unique_filename", "true");
+
+  //     const response = await fetch(
+  //       `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/raw/upload`,
+  //       {
+  //         method: "POST",
+  //         body: uploadData,
+  //       }
+  //     );
+
+  //     if (!response.ok) {
+  //       const errorData = await response.json();
+  //       throw new Error(
+  //         errorData.error?.message || `Upload failed: ${response.status}`
+  //       );
+  //     }
+
+  //     const data = await response.json();
+
+  //     // Step 5: Verify the uploaded file
+  //     setMessage("Verifying upload...");
+
+  //     const testResponse = await fetch(data.secure_url, {
+  //       method: "HEAD",
+  //       headers: {
+  //         Accept: "application/pdf",
+  //       },
+  //     });
+
+  //     if (!testResponse.ok) {
+  //       throw new Error("Upload succeeded but file is not accessible");
+  //     }
+
+  //     // Check content type
+  //     const contentType = testResponse.headers.get("content-type");
+  //     if (!contentType || !contentType.includes("application/pdf")) {
+  //       console.warn(
+  //         "Warning: Content-Type is not application/pdf:",
+  //         contentType
+  //       );
+  //     }
+  //     setFormData((prev) => ({ ...prev, pdfUrl: data.secure_url }));
+  //     setMessage("PDF uploaded successfully!");
+  //     setTimeout(() => setMessage(""), 3000);
+  //   } catch (error) {
+  //     console.error("PDF upload error:", error);
+  //     setMessage(`Error: ${error.message}`);
+  //     setTimeout(() => setMessage(""), 5000);
+  //   }
+  // };
+
   const handlePdfUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
+    if (file.type !== "application/pdf") {
+      setMessage("Please upload a PDF file");
+      return;
+    }
+
+    if (file.size > 50 * 1024 * 1024) {
+      setMessage("PDF must be under 50MB");
+      return;
+    }
+
     try {
-      // Step 1: Validate file type by MIME type
-      if (file.type !== "application/pdf") {
-        setMessage("Error: Please select a PDF file");
-        return;
-      }
-
-      // Step 2: Validate file size (limit to 20MB)
-      if (file.size > 10 * 1024 * 1024) {
-        setMessage("Error: PDF size should be less than 10MB");
-        return;
-      }
-
-      // Step 3: Validate actual PDF content
-      setMessage("Validating PDF file...");
-      await validatePdfFile(file);
-
-      // Step 4: Upload to Cloudinary
       setMessage("Uploading PDF...");
 
-      const uploadData = new FormData();
-      uploadData.append("file", file);
-      uploadData.append(
-        "upload_preset",
-        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
-      );
-      uploadData.append("folder", "books");
-      uploadData.append("resource_type", "raw"); // Important: Use 'raw' for PDFs
-      // uploadData.append("access_mode", "public");
-      // uploadData.append("use_filename", "true");
-      // uploadData.append("unique_filename", "true");
+      const formData = new FormData();
+      formData.append("file", file);
 
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/raw/upload`,
-        {
-          method: "POST",
-          body: uploadData,
-        }
-      );
+      // const res = await fetch("/api/upload-pdf", {
+      //   method: "POST",
+      //   body: formData,
+      // });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.error?.message || `Upload failed: ${response.status}`
-        );
-      }
+      //const data = await res.json();
 
-      const data = await response.json();
+      //if (!data.success) throw new Error(data.error);
 
-      // Step 5: Verify the uploaded file
-      setMessage("Verifying upload...");
+      // setFormData((prev) => ({
+      //   ...prev,
+      //   pdfUrl: data.url,
+      // }));
 
-      const testResponse = await fetch(data.secure_url, {
-        method: "HEAD",
-        headers: {
-          Accept: "application/pdf",
-        },
+      const res = await fetch("/api/upload/pdf", {
+        method: "POST",
+        body: formData,
       });
 
-      if (!testResponse.ok) {
-        throw new Error("Upload succeeded but file is not accessible");
-      }
+      const data = await res.json();
 
-      // Check content type
-      const contentType = testResponse.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/pdf")) {
-        console.warn(
-          "Warning: Content-Type is not application/pdf:",
-          contentType
-        );
-      }
-      setFormData((prev) => ({ ...prev, pdfUrl: data.secure_url }));
-      setMessage("PDF uploaded successfully!");
-      setTimeout(() => setMessage(""), 3000);
-    } catch (error) {
-      console.error("PDF upload error:", error);
-      setMessage(`Error: ${error.message}`);
-      setTimeout(() => setMessage(""), 5000);
+      if (!data.success) throw new Error(data.error);
+
+      setFormData((prev) => ({
+        ...prev,
+        pdfUrl: data.pdfUrl,
+      }));
+
+      setMessage("PDF uploaded successfully");
+    } catch (err) {
+      setMessage(err.message);
     }
   };
 
@@ -291,7 +345,8 @@ export default function BooksAdmin() {
       }
 
       const data = await response.json();
-      setFormData({ ...formData, coverImage: data.secure_url });
+      // setFormData({ ...formData, coverImage: data.secure_url });
+      setFormData((prev) => ({ ...prev, coverImage: data.secure_url }));
       setMessage("Image uploaded successfully!");
       setTimeout(() => setMessage(""), 3000);
     } catch (error) {
@@ -533,12 +588,12 @@ export default function BooksAdmin() {
                           {new Date(book.uploadDate).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <button
+                          {/* <button
                             onClick={() => handleEdit(book)}
                             className="text-blue-600 hover:text-blue-900 mr-3"
                           >
                             <FiEdit />
-                          </button>
+                          </button> */}
                           <button
                             onClick={() => handleDelete(book._id)}
                             className="text-red-600 hover:text-red-900"
