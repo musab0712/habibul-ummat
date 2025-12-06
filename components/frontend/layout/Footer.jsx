@@ -236,14 +236,14 @@ const Footer = () => {
             {/* Email */}
             <div className="flex items-center space-x-4 p-4 bg-emerald-800/30 rounded-xl border border-emerald-700/30 hover:border-amber-400/30 transition-all duration-300">
               <div className="flex-shrink-0">
-                <FaEnvelope className="h-8 w-8 text-amber-300" />
+                <FaEnvelope className="h-6 w-6 text-amber-300" />
               </div>
               <div>
                 <p className="font-semibold text-amber-300 text-sm">
                   {t.emailUs}
                 </p>
-                <p className="text-emerald-100 font-medium">
-                  info@muftihabibullah.com
+                <p className="text-emerald-100 text-sm">
+                  muftihabibullahqasmi6400@gmail.com
                 </p>
               </div>
             </div>
@@ -257,7 +257,7 @@ const Footer = () => {
                 <p className="font-semibold text-amber-300 text-sm">
                   {t.callUs}
                 </p>
-                <p className="text-emerald-100 font-medium">+92 300 123 4567</p>
+                <p className="text-emerald-100 font-medium">+91 9450546400</p>
               </div>
             </div>
 
