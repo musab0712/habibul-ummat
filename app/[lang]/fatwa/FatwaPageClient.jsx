@@ -159,7 +159,7 @@ const FatwaPageClient = () => {
             {filteredFatwas.map((fatwa) => (
               <div
                 key={fatwa._id}
-                className="group relative h-[450px] rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl cursor-pointer"
+                className="group relative h-[500px] sm:h-[450px] rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl cursor-pointer"
               >
                 {/* Cover */}
                 <div className="w-full h-11/12">
@@ -181,6 +181,15 @@ const FatwaPageClient = () => {
                 <h1 className="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-center py-2 px-4 text-sm font-semibold line-clamp-1">
                   {language === "ur" ? fatwa.titleUrdu : fatwa.titleEnglish}
                 </h1>
+                {/* Mobile-only button */}
+                <button
+                  onClick={() => window.open(fatwa.pdfUrl, "_blank")}
+                  className="md:hidden absolute bottom-10 left-1/2 -translate-x-1/2 
+             bg-emerald-600 hover:bg-emerald-700 text-white 
+             text-xs font-semibold px-4 py-2 rounded-lg shadow-lg"
+                >
+                  {language === "ur" ? "مطالعہ کریں" : "Read Fatwa"}
+                </button>
 
                 {/* Hover Overlay */}
                 <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4">
