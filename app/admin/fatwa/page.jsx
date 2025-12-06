@@ -16,11 +16,11 @@ import {
 } from "react-icons/fi";
 
 export default function FatwaAdmin() {
-  const [books, setBooks] = useState([]);
+  const [fatwas, setFatwas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState("");
-  const [editingBook, setEditingBook] = useState(null);
+  const [editingFatwa, setEditingFatwa] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     titleEnglish: "",
@@ -30,22 +30,22 @@ export default function FatwaAdmin() {
   });
 
   useEffect(() => {
-    loadBooks();
+    loadFatwas();
   }, []);
 
-  const loadBooks = async () => {
+  const loadFatwas = async () => {
     try {
       setIsLoading(true);
       const response = await fetch("/api/fatwa");
       if (response.ok) {
         const result = await response.json();
         if (result.success) {
-          setBooks(result.data);
+          setFatwas(result.data);
         }
       }
     } catch (error) {
-      console.error("Error loading books:", error);
-      setMessage("Error loading books");
+      console.error("Error loading fatwas:", error);
+      setMessage("Error loading fatwas");
     } finally {
       setIsLoading(false);
     }
@@ -57,8 +57,10 @@ export default function FatwaAdmin() {
     setMessage("");
 
     try {
-      const url = editingBook ? `/api/fatwa/${editingBook._id}` : "/api/fatwa";
-      const method = editingBook ? "PUT" : "POST";
+      const url = editingFatwa
+        ? `/api/fatwa/${editingFatwa._id}`
+        : "/api/fatwa";
+      const method = editingFatwa ? "PUT" : "POST";
 
       const response = await fetch(url, {
         method,
@@ -72,26 +74,26 @@ export default function FatwaAdmin() {
 
       if (result.success) {
         setMessage(
-          editingBook
+          editingFatwa
             ? "Fatwa updated successfully!"
             : "Fatwa added successfully!"
         );
         resetForm();
-        loadBooks();
+        loadFatwas();
         setTimeout(() => setMessage(""), 3000);
       } else {
         setMessage("Error: " + result.error);
       }
     } catch (error) {
-      console.error("Error saving Fatwa:", error);
-      setMessage("Error saving Fatwa");
+      console.error("Error saving fatwa:", error);
+      setMessage("Error saving fatwa");
     } finally {
       setIsSaving(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!confirm("Are you sure you want to delete this Fatwa?")) return;
+    if (!confirm("Are you sure you want to delete this fatwa?")) return;
 
     try {
       const response = await fetch(`/api/fatwa/${id}`, {
@@ -102,24 +104,24 @@ export default function FatwaAdmin() {
 
       if (result.success) {
         setMessage("Fatwa deleted successfully!");
-        loadBooks();
+        loadFatwas();
         setTimeout(() => setMessage(""), 3000);
       } else {
         setMessage("Error: " + result.error);
       }
     } catch (error) {
-      console.error("Error deleting Fatwa:", error);
-      setMessage("Error deleting Fatwa");
+      console.error("Error deleting fatwa:", error);
+      setMessage("Error deleting fatwa");
     }
   };
 
-  const handleEdit = (book) => {
-    setEditingBook(book);
+  const handleEdit = (fatwa) => {
+    setEditingFatwa(fatwa);
     setFormData({
-      titleEnglish: book.titleEnglish || "",
-      titleUrdu: book.titleUrdu || "",
-      pdfUrl: book.pdfUrl || "",
-      coverImage: book.coverImage || "",
+      titleEnglish: fatwa.titleEnglish || "",
+      titleUrdu: fatwa.titleUrdu || "",
+      pdfUrl: fatwa.pdfUrl || "",
+      coverImage: fatwa.coverImage || "",
     });
     setShowForm(true);
   };
@@ -131,7 +133,7 @@ export default function FatwaAdmin() {
       pdfUrl: "",
       coverImage: "",
     });
-    setEditingBook(null);
+    setEditingFatwa(null);
     setShowForm(false);
   };
 
@@ -143,14 +145,12 @@ export default function FatwaAdmin() {
         const arrayBuffer = e.target.result;
         const uint8Array = new Uint8Array(arrayBuffer);
 
-        // Check PDF magic number (first 4 bytes should be %PDF)
         if (
           uint8Array[0] === 0x25 && // %
           uint8Array[1] === 0x50 && // P
           uint8Array[2] === 0x44 && // D
-          uint8Array[3] === 0x46
+          uint8Array[3] === 0x46 // F
         ) {
-          // F
           resolve(true);
         } else {
           reject(new Error("File is not a valid PDF"));
@@ -158,92 +158,49 @@ export default function FatwaAdmin() {
       };
 
       reader.onerror = () => reject(new Error("Failed to read file"));
-      reader.readAsArrayBuffer(file.slice(0, 4)); // Read first 4 bytes
+      reader.readAsArrayBuffer(file.slice(0, 4));
     });
   };
 
+  // SAME PATTERN AS BOOKS (50MB + /api/upload/pdf)
   const handlePdfUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
+    if (file.type !== "application/pdf") {
+      setMessage("Please upload a PDF file");
+      return;
+    }
+
+    if (file.size > 50 * 1024 * 1024) {
+      setMessage("PDF must be under 50MB");
+      return;
+    }
+
     try {
-      // Step 1: Validate file type by MIME type
-      if (file.type !== "application/pdf") {
-        setMessage("Error: Please select a PDF file");
-        return;
-      }
-
-      // Step 2: Validate file size (limit to 20MB)
-      if (file.size > 10 * 1024 * 1024) {
-        setMessage("Error: PDF size should be less than 10MB");
-        return;
-      }
-
-      // Step 3: Validate actual PDF content
-      setMessage("Validating PDF file...");
-      await validatePdfFile(file);
-
-      // Step 4: Upload to Cloudinary
       setMessage("Uploading PDF...");
 
-      const uploadData = new FormData();
-      uploadData.append("file", file);
-      uploadData.append(
-        "upload_preset",
-        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
-      );
-      uploadData.append("folder", "Fatwa");
-      uploadData.append("resource_type", "raw"); // Important: Use 'raw' for PDFs
-      // uploadData.append("access_mode", "public");
-      // uploadData.append("use_filename", "true");
-      // uploadData.append("unique_filename", "true");
+      const uploadFormData = new FormData();
+      uploadFormData.append("file", file);
 
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/raw/upload`,
-        {
-          method: "POST",
-          body: uploadData,
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.error?.message || `Upload failed: ${response.status}`
-        );
-      }
-
-      const data = await response.json();
-
-      // Step 5: Verify the uploaded file
-      setMessage("Verifying upload...");
-
-      const testResponse = await fetch(data.secure_url, {
-        method: "HEAD",
-        headers: {
-          Accept: "application/pdf",
-        },
+      const res = await fetch("/api/upload/pdf", {
+        method: "POST",
+        body: uploadFormData,
       });
 
-      if (!testResponse.ok) {
-        throw new Error("Upload succeeded but file is not accessible");
-      }
+      const data = await res.json();
 
-      // Check content type
-      const contentType = testResponse.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/pdf")) {
-        console.warn(
-          "Warning: Content-Type is not application/pdf:",
-          contentType
-        );
-      }
-      setFormData((prev) => ({ ...prev, pdfUrl: data.secure_url }));
-      setMessage("PDF uploaded successfully!");
-      setTimeout(() => setMessage(""), 3000);
-    } catch (error) {
-      console.error("PDF upload error:", error);
-      setMessage(`Error: ${error.message}`);
-      setTimeout(() => setMessage(""), 5000);
+      if (!data.success) throw new Error(data.error);
+
+      setFormData((prev) => ({
+        ...prev,
+        pdfUrl: data.pdfUrl,
+      }));
+
+      setMessage("PDF uploaded successfully");
+    } catch (err) {
+      console.error("PDF upload error:", err);
+      setMessage(err.message || "Error uploading PDF");
     }
   };
 
@@ -267,30 +224,29 @@ export default function FatwaAdmin() {
     try {
       setMessage("Uploading image...");
 
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append(
+      const uploadFormData = new FormData();
+      uploadFormData.append("file", file);
+      uploadFormData.append(
         "upload_preset",
         process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
       );
-      formData.append("folder", "books-covers");
-      uploadData.append("access_mode", "public");
+      uploadFormData.append("folder", "fatwa-covers");
 
-      // Upload to Cloudinary
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
         {
           method: "POST",
-          body: formData,
+          body: uploadFormData,
         }
       );
 
       if (!response.ok) {
-        throw new Error("Upload failed");
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || "Upload failed");
       }
 
       const data = await response.json();
-      setFormData({ ...formData, coverImage: data.secure_url });
+      setFormData((prev) => ({ ...prev, coverImage: data.secure_url }));
       setMessage("Image uploaded successfully!");
       setTimeout(() => setMessage(""), 3000);
     } catch (error) {
@@ -305,7 +261,7 @@ export default function FatwaAdmin() {
         <AdminLayout>
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <span className="ml-2 text-gray-600">Loading Fatwa...</span>
+            <span className="ml-2 text-gray-600">Loading fatwas...</span>
           </div>
         </AdminLayout>
       </ProtectedRoute>
@@ -345,7 +301,7 @@ export default function FatwaAdmin() {
             <div className="bg-white rounded-lg shadow p-6 mb-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-semibold text-gray-800">
-                  {editingBook ? "Edit Fatwa" : "Add New Fatwa"}
+                  {editingFatwa ? "Edit Fatwa" : "Add New Fatwa"}
                 </h2>
                 <button
                   onClick={resetForm}
@@ -462,7 +418,7 @@ export default function FatwaAdmin() {
                     <FiSave className="mr-2" />
                     {isSaving
                       ? "Saving..."
-                      : editingBook
+                      : editingFatwa
                       ? "Update Fatwa"
                       : "Add Fatwa"}
                   </button>
@@ -494,23 +450,23 @@ export default function FatwaAdmin() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {books.length === 0 ? (
+                  {fatwas.length === 0 ? (
                     <tr>
                       <td
                         colSpan="5"
                         className="px-6 py-4 text-center text-gray-500"
                       >
-                        No Fatwa found. Add your first Fatwa!
+                        No fatwa found. Add your first fatwa!
                       </td>
                     </tr>
                   ) : (
-                    books.map((book) => (
-                      <tr key={book._id} className="hover:bg-gray-50">
+                    fatwas.map((fatwa) => (
+                      <tr key={fatwa._id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">
-                          {book.coverImage ? (
+                          {fatwa.coverImage ? (
                             <img
-                              src={book.coverImage}
-                              alt={book.titleEnglish}
+                              src={fatwa.coverImage}
+                              alt={fatwa.titleEnglish}
                               className="w-12 h-16 object-cover rounded-md"
                             />
                           ) : (
@@ -520,26 +476,26 @@ export default function FatwaAdmin() {
                           )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {book.titleEnglish}
+                          {fatwa.titleEnglish}
                         </td>
                         <td
                           className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
                           dir="rtl"
                         >
-                          {book.titleUrdu}
+                          {fatwa.titleUrdu}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {new Date(book.uploadDate).toLocaleDateString()}
+                          {new Date(fatwa.uploadDate).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <button
-                            onClick={() => handleEdit(book)}
+                          {/* <button
+                            onClick={() => handleEdit(fatwa)}
                             className="text-blue-600 hover:text-blue-900 mr-3"
                           >
                             <FiEdit />
-                          </button>
+                          </button> */}
                           <button
-                            onClick={() => handleDelete(book._id)}
+                            onClick={() => handleDelete(fatwa._id)}
                             className="text-red-600 hover:text-red-900"
                           >
                             <FiTrash2 />

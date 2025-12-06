@@ -1,12 +1,15 @@
+// app/api/pdf/[...key]/route.js
 import { GetObjectCommand } from "@aws-sdk/client-s3";
 import { r2 } from "@/lib/r2";
 
-export async function GET(req, context) {
-  // 👇 Next.js 15: context ko await karo
-  const { params } = await context;
+export async function GET(req, { params }) {
+  const resolvedParams = await params;
 
   // [...key] array hoga: ["books", "file.pdf"]
-  const rawKey = Array.isArray(params.key) ? params.key.join("/") : params.key;
+  const rawKey = Array.isArray(resolvedParams.key)
+    ? resolvedParams.key.join("/")
+    : resolvedParams.key;
+
   const key = decodeURIComponent(rawKey);
 
   const command = new GetObjectCommand({
@@ -19,7 +22,7 @@ export async function GET(req, context) {
   return new Response(data.Body, {
     headers: {
       "Content-Type": "application/pdf",
-      "Content-Disposition": "inline", // inline = browser me open, attachment = force download
+      "Content-Disposition": "inline", // inline = browser me open
       "Cache-Control": "private, max-age=3600",
     },
   });
