@@ -16,6 +16,44 @@ export const metadata = {
   title: "Mufti Habibullah Qasmi - Islamic Scholar",
   description:
     "Official website of Mufti Habibullah Qasmi - Islamic scholar, researcher, and spiritual guide",
+  authors: [{ name: "Musab Hassan" }],
+  icon: {
+    icon: "/favicon.ico",
+  },
+  keywords: [
+    "Mufti Habibullah Qasmi",
+    "Islamic Scholar",
+    "Islamic Researcher",
+    "Spiritual Guide",
+    "Islamic Teachings",
+    "Fatwas",
+    "Islamic Articles",
+    "Islamic Lectures",
+    "Islamic Website",
+    "Islamic Knowledge",
+    "Islamic Guidance",
+  ],
+
+  openGraph: {
+    title: "Mufti Habibullah Qasmi - Islamic Scholar",
+    description:
+      "Official website of Mufti Habibullah Qasmi - Islamic scholar, researcher, and spiritual guide",
+    url: "https://www.habibulummat.com",
+    siteName: "Mufti Habibullah Qasmi",
+    alternates: {
+      canonical: "https://www.habibulummat.com/en",
+    },
+    images: [
+      {
+        url: "https://www.habibulummat.com/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Mufti Habibullah Qasmi - Islamic Scholar",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }) {
