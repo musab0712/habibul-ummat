@@ -184,7 +184,7 @@ const FatwaPageClient = () => {
                 {/* Mobile-only button */}
                 <button
                   onClick={() => window.open(fatwa.pdfUrl, "_blank")}
-                  className="md:hidden absolute bottom-10 left-1/2 -translate-x-1/2 
+                  className="md:hidden absolute bottom-10 left-1/2 -translate-x-1/2 z-20
              bg-emerald-600 hover:bg-emerald-700 text-white 
              text-xs font-semibold px-4 py-2 rounded-lg shadow-lg"
                 >
@@ -192,7 +192,7 @@ const FatwaPageClient = () => {
                 </button>
 
                 {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4">
+                <div className="absolute inset-0 bg-black/70 pointer-events-none md:pointer-events-auto flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4">
                   <div className="text-center">
                     <h3 className="text-lg font-bold text-white mb-2 line-clamp-2">
                       {language === "ur" ? fatwa.titleUrdu : fatwa.titleEnglish}

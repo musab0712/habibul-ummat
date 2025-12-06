@@ -208,15 +208,15 @@ const LatestBooks = () => {
               {/* Mobile-only button */}
               <button
                 onClick={() => window.open(book.pdfUrl, "_blank")}
-                className="md:hidden absolute bottom-10 left-1/2 -translate-x-1/2 
+                className="md:hidden absolute bottom-10 left-1/2 -translate-x-1/2 z-20
              bg-emerald-600 hover:bg-emerald-700 text-white 
              text-xs font-semibold px-4 py-2 rounded-lg shadow-lg"
               >
-                {language === "ur" ? "مطالعہ کریں" : "Read Fatwa"}
+                {language === "ur" ? "مطالعہ کریں" : "Read Book"}
               </button>
 
               {/* Overlay - Hidden by default, shown on hover */}
-              <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute inset-0 bg-black/60 pointer-events-none md:pointer-events-auto flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <div className="text-center px-4">
                   <h3 className="text-xl font-bold text-white mb-6 line-clamp-3">
                     {language === "ur" ? book.titleUrdu : book.titleEnglish}
