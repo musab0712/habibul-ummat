@@ -1,87 +1,69 @@
-// app/api/upload/pdf/route.js
 export const runtime = "nodejs";
 
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { NextResponse } from "next/server";
-import { r2 } from "@/lib/r2";
 
-// ✅ Allowed origins list (yahan sirf apne domains + localhost)
-const ALLOWED_ORIGINS = [
-  "https://www.habibulummat.com",
-  "https://habibulummat.com",
-  "http://localhost:3000",
-  "http://127.0.0.1:3000",
-  // optional: vercel domain se bhi hit karna ho to
-  "https://habibul-ummat.vercel.app",
-];
+// ✅ TEMP: sab origins allow (sirf debug ke liye, baad me tighten karenge)
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
 
-// Helper: given request, decide CORS headers
-function getCorsHeaders(req) {
-  const origin = req.headers.get("origin");
-  // console.log("Origin:", origin); // debug ke liye
-
-  if (origin && ALLOWED_ORIGINS.includes(origin)) {
-    return {
-      "Access-Control-Allow-Origin": origin, // 👈 reflect allowed origin
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-      Vary: "Origin",
-    };
-  }
-
-  // origin not allowed -> no CORS headers
-  return null;
-}
-
-// Helper: JSON + CORS merge
-function jsonWithCors(req, body, init = {}) {
-  const cors = getCorsHeaders(req);
+// common helper
+function jsonWithCors(body, init = {}) {
   return NextResponse.json(body, {
     ...init,
     headers: {
       ...(init.headers || {}),
-      ...(cors || {}),
+      ...corsHeaders,
     },
   });
 }
 
-// ✅ Preflight handler (OPTIONS)
-export async function OPTIONS(req) {
-  const cors = getCorsHeaders(req);
+// ✅ R2 client yahin banayenge (taaki error try/catch me aaye)
+function createR2Client() {
+  const accountId = process.env.R2_ACCOUNT_ID;
+  const accessKeyId = process.env.R2_ACCESS_KEY_ID;
+  const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY;
+  const bucket = process.env.R2_BUCKET_NAME;
 
-  if (!cors) {
-    // Origin not allowed
-    return new NextResponse("Origin not allowed", {
-      status: 403,
-    });
+  if (!accountId || !accessKeyId || !secretAccessKey || !bucket) {
+    throw new Error(
+      "R2 env vars missing. Please check Vercel Environment Variables."
+    );
   }
 
-  return new NextResponse(null, {
-    status: 204,
-    headers: cors,
+  return new S3Client({
+    region: "auto",
+    endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
   });
 }
 
-// ✅ Main upload handler
+// ✅ OPTIONS handler (preflight)
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: corsHeaders,
+  });
+}
+
+// ✅ POST handler
 export async function POST(req) {
   try {
-    const cors = getCorsHeaders(req);
-    if (!cors) {
-      return new NextResponse("Origin not allowed", {
-        status: 403,
-      });
-    }
-
     const formData = await req.formData();
     const file = formData.get("file");
 
     if (!file || file.type !== "application/pdf") {
-      return jsonWithCors(req, { error: "Invalid PDF" }, { status: 400 });
+      return jsonWithCors({ error: "Invalid PDF" }, { status: 400 });
     }
 
     if (file.size > 50 * 1024 * 1024) {
       return jsonWithCors(
-        req,
         { error: "PDF size should be less than 50MB" },
         { status: 400 }
       );
@@ -89,6 +71,8 @@ export async function POST(req) {
 
     const buffer = Buffer.from(await file.arrayBuffer());
     const key = `books/${Date.now()}-${file.name}`;
+
+    const r2 = createR2Client();
 
     await r2.send(
       new PutObjectCommand({
@@ -99,12 +83,15 @@ export async function POST(req) {
       })
     );
 
-    return jsonWithCors(req, {
+    return jsonWithCors({
       success: true,
       pdfUrl: `/api/pdf/${key}`,
     });
   } catch (err) {
-    console.error("Upload error:", err);
-    return jsonWithCors(req, { error: err.message }, { status: 500 });
+    console.error("Upload error (server):", err);
+    return jsonWithCors(
+      { error: err.message || "Upload failed on server" },
+      { status: 500 }
+    );
   }
 }
