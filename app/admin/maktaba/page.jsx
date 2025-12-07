@@ -29,6 +29,10 @@ export default function BooksAdmin() {
     coverImage: "",
   });
 
+  // upload progress states
+  const [uploadProgress, setUploadProgress] = useState(0); // 0–100
+  const [isUploading, setIsUploading] = useState(false);
+
   useEffect(() => {
     loadBooks();
   }, []);
@@ -148,9 +152,8 @@ export default function BooksAdmin() {
           uint8Array[0] === 0x25 && // %
           uint8Array[1] === 0x50 && // P
           uint8Array[2] === 0x44 && // D
-          uint8Array[3] === 0x46
+          uint8Array[3] === 0x46 // F
         ) {
-          // F
           resolve(true);
         } else {
           reject(new Error("File is not a valid PDF"));
@@ -162,46 +165,7 @@ export default function BooksAdmin() {
     });
   };
 
-  // const handlePdfUpload = async (e) => {
-  //   const file = e.target.files[0];
-  //   if (!file) return;
-
-  //   if (file.type !== "application/pdf") {
-  //     setMessage("Please upload a PDF file");
-  //     return;
-  //   }
-
-  //   if (file.size > 50 * 1024 * 1024) {
-  //     setMessage("PDF must be under 50MB");
-  //     return;
-  //   }
-
-  //   try {
-  //     setMessage("Uploading PDF...");
-
-  //     const formData = new FormData();
-  //     formData.append("file", file);
-
-  //     const res = await fetch("/api/upload/pdf", {
-  //       method: "POST",
-  //       body: formData,
-  //     });
-
-  //     const data = await res.json();
-
-  //     if (!data.success) throw new Error(data.error);
-
-  //     setFormData((prev) => ({
-  //       ...prev,
-  //       pdfUrl: data.pdfUrl,
-  //     }));
-
-  //     setMessage("PDF uploaded successfully");
-  //   } catch (err) {
-  //     setMessage(err.message);
-  //   }
-  // };
-
+  // 🔥 NEW: PDF upload with presigned URL + progress bar
   const handlePdfUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -217,42 +181,81 @@ export default function BooksAdmin() {
     }
 
     try {
-      setMessage("Uploading PDF...");
+      setMessage("");
+      setIsUploading(true);
+      setUploadProgress(0);
 
-      const formData = new FormData();
-      formData.append("file", file);
+      // (optional) deep validation using magic number
+      try {
+        await validatePdfFile(file);
+      } catch (err) {
+        setIsUploading(false);
+        setUploadProgress(0);
+        setMessage(err.message || "Invalid PDF file");
+        return;
+      }
 
-      // ✅ IMPORTANT: upload goes directly to Vercel, not Cloudflare domain
-      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
-
-      const res = await fetch(`${baseUrl}/api/upload/pdf`, {
+      // 1) Get presigned URL from backend
+      const resUrl = await fetch("/api/upload-url", {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fileName: file.name, fileType: file.type }),
       });
 
-      const contentType = res.headers.get("content-type") || "";
-
-      let data;
-      if (contentType.includes("application/json")) {
-        data = await res.json();
-      } else {
-        const text = await res.text();
-        throw new Error(`Upload failed (${res.status}): ${text}`);
+      if (!resUrl.ok) {
+        const text = await resUrl.text();
+        throw new Error(`Upload URL error (${resUrl.status}): ${text}`);
       }
 
-      if (!res.ok || !data.success) {
-        throw new Error(data?.error || "Upload failed");
-      }
+      const { uploadUrl, key } = await resUrl.json();
+
+      // 2) Upload directly to R2 with progress
+      await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+
+        xhr.upload.onprogress = (event) => {
+          if (event.lengthComputable) {
+            const percent = Math.round((event.loaded / event.total) * 100);
+            setUploadProgress(percent);
+          }
+        };
+
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve();
+          } else {
+            reject(
+              new Error(`R2 upload failed (${xhr.status}): ${xhr.responseText}`)
+            );
+          }
+        };
+
+        xhr.onerror = () => {
+          reject(new Error("Network error while uploading PDF"));
+        };
+
+        xhr.open("PUT", uploadUrl, true);
+        xhr.send(file);
+      });
+
+      // 3) Set final PDF URL (served via your API)
+      const pdfUrl = `/api/pdf/${key}`; // or direct R2 public URL
 
       setFormData((prev) => ({
         ...prev,
-        pdfUrl: data.pdfUrl,
+        pdfUrl,
       }));
 
+      setUploadProgress(100);
       setMessage("PDF uploaded successfully ✅");
     } catch (err) {
       console.error(err);
       setMessage(err.message || "Upload failed");
+    } finally {
+      setTimeout(() => {
+        setIsUploading(false);
+        setUploadProgress(0);
+      }, 1500);
     }
   };
 
@@ -276,21 +279,20 @@ export default function BooksAdmin() {
     try {
       setMessage("Uploading image...");
 
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append(
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append(
         "upload_preset",
         process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
       );
-      formData.append("folder", "books-covers");
-      // formData.append("access_mode", "public");
+      fd.append("folder", "books-covers");
 
       // Upload to Cloudinary
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
         {
           method: "POST",
-          body: formData,
+          body: fd,
         }
       );
 
@@ -300,7 +302,6 @@ export default function BooksAdmin() {
       }
 
       const data = await response.json();
-      // setFormData({ ...formData, coverImage: data.secure_url });
       setFormData((prev) => ({ ...prev, coverImage: data.secure_url }));
       setMessage("Image uploaded successfully!");
       setTimeout(() => setMessage(""), 3000);
@@ -394,7 +395,10 @@ export default function BooksAdmin() {
                       type="text"
                       value={formData.titleUrdu || ""}
                       onChange={(e) =>
-                        setFormData({ ...formData, titleUrdu: e.target.value })
+                        setFormData({
+                          ...formData,
+                          titleUrdu: e.target.value,
+                        })
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       required
@@ -402,33 +406,56 @@ export default function BooksAdmin() {
                   </div>
                 </div>
 
+                {/* PDF upload + progress bar */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     PDF File
                   </label>
-                  <div className="flex items-center space-x-4">
-                    {formData.pdfUrl ? (
+
+                  <div className="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-2 md:space-y-0">
+                    <label className="cursor-pointer bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors flex items-center w-fit">
+                      <FiUpload className="mr-2" />
+                      {formData.pdfUrl ? "Replace PDF" : "Upload PDF"}
+                      <input
+                        type="file"
+                        accept="application/pdf"
+                        onChange={handlePdfUpload}
+                        className="hidden"
+                        disabled={isUploading}
+                      />
+                    </label>
+
+                    {formData.pdfUrl && !isUploading && (
                       <span className="text-sm text-green-600 font-medium">
-                        ✓ PDF uploaded successfully
+                        ✓ PDF uploaded
                       </span>
-                    ) : (
-                      <label className="cursor-pointer bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors flex items-center">
-                        <FiUpload className="mr-2" />
-                        Upload PDF
-                        <input
-                          type="file"
-                          accept="application/pdf"
-                          onChange={handlePdfUpload}
-                          className="hidden"
-                        />
-                      </label>
                     )}
                   </div>
+
+                  {isUploading && (
+                    <div className="mt-2 w-full md:w-72">
+                      <div className="flex justify-between mb-1">
+                        <span className="text-xs text-gray-600">
+                          Uploading...
+                        </span>
+                        <span className="text-xs font-medium text-gray-700">
+                          {uploadProgress}%
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                        <div
+                          className="h-2 bg-blue-600 rounded-full transition-all duration-200"
+                          style={{ width: `${uploadProgress}%` }}
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
 
+                {/* Cover image */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Cover Image (Optional)
+                    Cover Image
                   </label>
                   <div className="flex items-center space-x-4">
                     {formData.coverImage ? (
@@ -508,7 +535,7 @@ export default function BooksAdmin() {
                   {books.length === 0 ? (
                     <tr>
                       <td
-                        colSpan="5"
+                        colSpan={5}
                         className="px-6 py-4 text-center text-gray-500"
                       >
                         No books found. Add your first book!

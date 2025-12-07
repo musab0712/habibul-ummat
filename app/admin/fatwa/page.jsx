@@ -28,6 +28,9 @@ export default function FatwaAdmin() {
     pdfUrl: "",
     coverImage: "",
   });
+  // upload progress states
+  const [uploadProgress, setUploadProgress] = useState(0); // 0–100
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     loadFatwas();
@@ -204,6 +207,7 @@ export default function FatwaAdmin() {
   //   }
   // };
 
+  // 🔥 NEW: PDF upload with presigned URL + progress bar
   const handlePdfUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -219,42 +223,81 @@ export default function FatwaAdmin() {
     }
 
     try {
-      setMessage("Uploading PDF...");
+      setMessage("");
+      setIsUploading(true);
+      setUploadProgress(0);
 
-      const formData = new FormData();
-      formData.append("file", file);
+      // (optional) deep validation using magic number
+      try {
+        await validatePdfFile(file);
+      } catch (err) {
+        setIsUploading(false);
+        setUploadProgress(0);
+        setMessage(err.message || "Invalid PDF file");
+        return;
+      }
 
-      // ✅ IMPORTANT: upload goes directly to Vercel, not Cloudflare domain
-      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
-
-      const res = await fetch(`${baseUrl}/api/upload/pdf`, {
+      // 1) Get presigned URL from backend
+      const resUrl = await fetch("/api/upload-url", {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fileName: file.name, fileType: file.type }),
       });
 
-      const contentType = res.headers.get("content-type") || "";
-
-      let data;
-      if (contentType.includes("application/json")) {
-        data = await res.json();
-      } else {
-        const text = await res.text();
-        throw new Error(`Upload failed (${res.status}): ${text}`);
+      if (!resUrl.ok) {
+        const text = await resUrl.text();
+        throw new Error(`Upload URL error (${resUrl.status}): ${text}`);
       }
 
-      if (!res.ok || !data.success) {
-        throw new Error(data?.error || "Upload failed");
-      }
+      const { uploadUrl, key } = await resUrl.json();
+
+      // 2) Upload directly to R2 with progress
+      await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+
+        xhr.upload.onprogress = (event) => {
+          if (event.lengthComputable) {
+            const percent = Math.round((event.loaded / event.total) * 100);
+            setUploadProgress(percent);
+          }
+        };
+
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve();
+          } else {
+            reject(
+              new Error(`R2 upload failed (${xhr.status}): ${xhr.responseText}`)
+            );
+          }
+        };
+
+        xhr.onerror = () => {
+          reject(new Error("Network error while uploading PDF"));
+        };
+
+        xhr.open("PUT", uploadUrl, true);
+        xhr.send(file);
+      });
+
+      // 3) Set final PDF URL (served via your API)
+      const pdfUrl = `/api/pdf/${key}`; // or direct R2 public URL
 
       setFormData((prev) => ({
         ...prev,
-        pdfUrl: data.pdfUrl,
+        pdfUrl,
       }));
 
+      setUploadProgress(100);
       setMessage("PDF uploaded successfully ✅");
     } catch (err) {
       console.error(err);
       setMessage(err.message || "Upload failed");
+    } finally {
+      setTimeout(() => {
+        setIsUploading(false);
+        setUploadProgress(0);
+      }, 1500);
     }
   };
 
@@ -401,33 +444,55 @@ export default function FatwaAdmin() {
                   </div>
                 </div>
 
+                {/* PDF upload + progress bar */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     PDF File
                   </label>
-                  <div className="flex items-center space-x-4">
-                    {formData.pdfUrl ? (
+
+                  <div className="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-2 md:space-y-0">
+                    <label className="cursor-pointer bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors flex items-center w-fit">
+                      <FiUpload className="mr-2" />
+                      {formData.pdfUrl ? "Replace PDF" : "Upload PDF"}
+                      <input
+                        type="file"
+                        accept="application/pdf"
+                        onChange={handlePdfUpload}
+                        className="hidden"
+                        disabled={isUploading}
+                      />
+                    </label>
+
+                    {formData.pdfUrl && !isUploading && (
                       <span className="text-sm text-green-600 font-medium">
-                        ✓ PDF uploaded successfully
+                        ✓ PDF uploaded
                       </span>
-                    ) : (
-                      <label className="cursor-pointer bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors flex items-center">
-                        <FiUpload className="mr-2" />
-                        Upload PDF
-                        <input
-                          type="file"
-                          accept="application/pdf"
-                          onChange={handlePdfUpload}
-                          className="hidden"
-                        />
-                      </label>
                     )}
                   </div>
+
+                  {isUploading && (
+                    <div className="mt-2 w-full md:w-72">
+                      <div className="flex justify-between mb-1">
+                        <span className="text-xs text-gray-600">
+                          Uploading...
+                        </span>
+                        <span className="text-xs font-medium text-gray-700">
+                          {uploadProgress}%
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                        <div
+                          className="h-2 bg-blue-600 rounded-full transition-all duration-200"
+                          style={{ width: `${uploadProgress}%` }}
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Cover Image (Optional)
+                    Cover Image
                   </label>
                   <div className="flex items-center space-x-4">
                     {formData.coverImage ? (
