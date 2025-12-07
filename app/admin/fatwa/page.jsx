@@ -163,6 +163,47 @@ export default function FatwaAdmin() {
   };
 
   // SAME PATTERN AS BOOKS (50MB + /api/upload/pdf)
+  // const handlePdfUpload = async (e) => {
+  //   const file = e.target.files[0];
+  //   if (!file) return;
+
+  //   if (file.type !== "application/pdf") {
+  //     setMessage("Please upload a PDF file");
+  //     return;
+  //   }
+
+  //   if (file.size > 50 * 1024 * 1024) {
+  //     setMessage("PDF must be under 50MB");
+  //     return;
+  //   }
+
+  //   try {
+  //     setMessage("Uploading PDF...");
+
+  //     const uploadFormData = new FormData();
+  //     uploadFormData.append("file", file);
+
+  //     const res = await fetch("/api/upload/pdf", {
+  //       method: "POST",
+  //       body: uploadFormData,
+  //     });
+
+  //     const data = await res.json();
+
+  //     if (!data.success) throw new Error(data.error);
+
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       pdfUrl: data.pdfUrl,
+  //     }));
+
+  //     setMessage("PDF uploaded successfully");
+  //   } catch (err) {
+  //     console.error("PDF upload error:", err);
+  //     setMessage(err.message || "Error uploading PDF");
+  //   }
+  // };
+
   const handlePdfUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -180,27 +221,40 @@ export default function FatwaAdmin() {
     try {
       setMessage("Uploading PDF...");
 
-      const uploadFormData = new FormData();
-      uploadFormData.append("file", file);
+      const formData = new FormData();
+      formData.append("file", file);
 
-      const res = await fetch("/api/upload/pdf", {
+      // ✅ IMPORTANT: upload goes directly to Vercel, not Cloudflare domain
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+
+      const res = await fetch(`${baseUrl}/api/upload/pdf`, {
         method: "POST",
-        body: uploadFormData,
+        body: formData,
       });
 
-      const data = await res.json();
+      const contentType = res.headers.get("content-type") || "";
 
-      if (!data.success) throw new Error(data.error);
+      let data;
+      if (contentType.includes("application/json")) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        throw new Error(`Upload failed (${res.status}): ${text}`);
+      }
+
+      if (!res.ok || !data.success) {
+        throw new Error(data?.error || "Upload failed");
+      }
 
       setFormData((prev) => ({
         ...prev,
         pdfUrl: data.pdfUrl,
       }));
 
-      setMessage("PDF uploaded successfully");
+      setMessage("PDF uploaded successfully ✅");
     } catch (err) {
-      console.error("PDF upload error:", err);
-      setMessage(err.message || "Error uploading PDF");
+      console.error(err);
+      setMessage(err.message || "Upload failed");
     }
   };
 
