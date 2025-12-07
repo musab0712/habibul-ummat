@@ -28,7 +28,7 @@ export default function Login() {
     const success = login(email, password);
 
     if (!success) {
-      setError("Invalid credentials. Use admin@example.com / password");
+      setError("Invalid credentials. Please try again.");
       setIsLoading(false);
       return;
     }
@@ -98,10 +98,10 @@ export default function Login() {
             </button>
           </div>
 
-          <div className="text-center text-sm text-gray-500 mt-4">
+          {/* <div className="text-center text-sm text-gray-500 mt-4">
             <p>Demo credentials:</p>
             <p>admin@example.com / password</p>
-          </div>
+          </div> */}
         </form>
       </div>
     </div>

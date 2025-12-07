@@ -24,7 +24,10 @@ export function AuthProvider({ children }) {
 
   const login = (email, password) => {
     // Simple authentication - in real app, this would call an API
-    if (email === "admin@example.com" && password === "password") {
+    if (
+      email === "muftihabibullahqasmi6400@gmail.com" &&
+      password === "Mufti6400"
+    ) {
       const user = { email, name: "Admin User" };
       setCurrentUser(user);
       localStorage.setItem("adminUser", JSON.stringify(user));
