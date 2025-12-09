@@ -13,6 +13,7 @@ import {
 } from "react-icons/fa";
 import { FiTarget } from "react-icons/fi";
 import { useLanguage } from "../../../context/LanguageContext";
+import Link from "next/link";
 
 const AboutPage = () => {
   const { language } = useLanguage();
@@ -46,7 +47,7 @@ const AboutPage = () => {
   const achievements = [
     {
       icon: FaBook,
-      title: language === "ur" ? "50+ کتابیں تصنیف" : "50+ Books Authored",
+      title: language === "ur" ? "80+ کتابیں تصنیف" : "80+ Books Authored",
       description:
         language === "ur"
           ? "اسلامی علوم میں متعدد کتابوں کی تصنیف"
@@ -54,7 +55,7 @@ const AboutPage = () => {
     },
     {
       icon: FaGraduationCap,
-      title: language === "ur" ? "30+ سال تجربہ" : "30+ Years Experience",
+      title: language === "ur" ? "50+ سال تجربہ" : "50+ Years Experience",
       description:
         language === "ur"
           ? "اسلامی تعلیم میں تین دہائیوں کا تجربہ"
@@ -489,12 +490,16 @@ const AboutPage = () => {
                   : "Read Mufti Sahib's books, listen to his lectures, and illuminate your life with Islamic knowledge."}
               </p>
               <div className="flex flex-wrap justify-center gap-4">
-                <button className="bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl">
-                  {language === "ur" ? "کتابیں دیکھیں" : "View Books"}
-                </button>
-                <button className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300">
-                  {language === "ur" ? "لیکچرز سنیں" : "Listen Lectures"}
-                </button>
+                <Link href={`/${language}/maktab`}>
+                  <button className="bg-amber-500 hover:bg-amber-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl">
+                    {language === "ur" ? "کتابیں دیکھیں" : "View Books"}
+                  </button>
+                </Link>
+                <Link href={`/${language}/videos`}>
+                  <button className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300">
+                    {language === "ur" ? "لیکچرز سنیں" : "Listen Lectures"}
+                  </button>
+                </Link>
               </div>
             </div>
           </div>

@@ -327,9 +327,9 @@ const ContactPage = () => {
                       <p className="text-emerald-100">
                         {language === "ur"
                           ? contactInfo.address?.urdu ||
-                            "جامعہ محجب، لاہور، پاکستان"
+                            "جامعہ اسلامیہ دار العلوم مھذب پور ،سنجر پور،اعظم گڈھ یوپی انڈیا"
                           : contactInfo.address?.english ||
-                            "Jamia Mohajjab, Lahore, Pakistan"}
+                            "Jamia Islamia Darul Uloom Mahezpur, Sanjarpur, Azamgarh, U.P., India"}
                       </p>
                     </div>
                   </div>
@@ -341,8 +341,7 @@ const ContactPage = () => {
                         {language === "ur" ? "فون" : "Phone"}
                       </h3>
                       <p className="text-emerald-100">
-                        {contactInfo.phoneNumbers?.primary ||
-                          "+92 300 123 4567"}
+                        {contactInfo.phoneNumbers?.primary || "9936368346"}
                         {contactInfo.phoneNumbers?.secondary && (
                           <>
                             <br />
@@ -360,7 +359,8 @@ const ContactPage = () => {
                         {language === "ur" ? "ای میل" : "Email"}
                       </h3>
                       <p className="text-emerald-100">
-                        {contactInfo.email || "info@muftihabibullah.com"}
+                        {contactInfo.email ||
+                          "muftihabibullahqasmi6400@gmail.com"}
                       </p>
                     </div>
                   </div>
@@ -373,8 +373,8 @@ const ContactPage = () => {
                       </h3>
                       <p className="text-emerald-100">
                         {language === "ur"
-                          ? "پیر تا جمعہ: صبح 9 بجے سے شام 5 بجے تک"
-                          : "Monday to Friday: 9:00 AM to 5:00 PM"}
+                          ? " سنیچر سے جمعرات: صبح 12 بجے سے رات 10 بجے تک"
+                          : "Saturday to Thursday: 12:00 AM to 10:00 PM"}
                       </p>
                     </div>
                   </div>

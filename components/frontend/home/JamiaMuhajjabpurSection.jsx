@@ -51,7 +51,9 @@ const JamiaMuhajjabpurSection = () => {
             <FaUniversity className="h-8 w-8 text-white" />
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            {language === "ur" ? "جامعه مھذب پور" : "Jamia Muhajjabpur"}
+            {language === "ur"
+              ? "جامعہ اسلامیہ دار العلوم مہذب پور"
+              : "Jamia Islamia Darul Uloom Muhajjabpur"}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             {language === "ur"
@@ -86,7 +88,7 @@ const JamiaMuhajjabpurSection = () => {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
             <div>
               <div className="text-3xl lg:text-4xl font-bold text-amber-300 mb-2">
-                500+
+                5000+
               </div>
               <div className="text-emerald-100">
                 {language === "ur" ? "طلباء" : "Students"}
@@ -94,7 +96,7 @@ const JamiaMuhajjabpurSection = () => {
             </div>
             <div>
               <div className="text-3xl lg:text-4xl font-bold text-amber-300 mb-2">
-                25+
+                35+
               </div>
               <div className="text-emerald-100">
                 {language === "ur" ? "اساتذہ" : "Teachers"}
@@ -102,7 +104,7 @@ const JamiaMuhajjabpurSection = () => {
             </div>
             <div>
               <div className="text-3xl lg:text-4xl font-bold text-amber-300 mb-2">
-                1000+
+                2000+
               </div>
               <div className="text-emerald-100">
                 {language === "ur" ? "فارغ التحصیل" : "Graduates"}
@@ -110,7 +112,7 @@ const JamiaMuhajjabpurSection = () => {
             </div>
             <div>
               <div className="text-3xl lg:text-4xl font-bold text-amber-300 mb-2">
-                35+
+                32+
               </div>
               <div className="text-emerald-100">
                 {language === "ur" ? "سالوں سے" : "Years Serving"}
@@ -124,8 +126,8 @@ const JamiaMuhajjabpurSection = () => {
           <div className="max-w-2xl mx-auto">
             <p className="text-lg text-gray-600 mb-8">
               {language === "ur"
-                ? "جامعہ محجب پور میں داخلے کے لیے درخواستیں موصول ہو رہی ہیں۔ اپنے بچوں کو اسلامی تعلیم سے آراستہ کریں۔"
-                : "Applications are being received for admission to Jamia Muhajjabpur. Adorn your children with Islamic education."}
+                ? "جامعہ اسلامیہ دار العلوم مہذب پور میں داخلے کے لیے درخواستیں موصول ہورہی ہیں، اپنے بچوں کو اسلامی تعلیم سے آراستہ کریں "
+                : "Applications are being received for admission to Jamia Islamia Darul Uloom Muhajjabpur. Adorn your children with Islamic education."}
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link

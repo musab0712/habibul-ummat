@@ -257,7 +257,7 @@ const Footer = () => {
                 <p className="font-semibold text-amber-300 text-sm">
                   {t.callUs}
                 </p>
-                <p className="text-emerald-100 font-medium">+91 9450546400</p>
+                <p className="text-emerald-100 font-medium">9936368346</p>
               </div>
             </div>
 
@@ -272,8 +272,8 @@ const Footer = () => {
                 </p>
                 <p className="text-emerald-100 font-medium text-sm">
                   {language === "ur"
-                    ? " جامعہ اسلامیہ دار العلوم مھذب پور ،سنجر پور،اعظم گڈھ یوپی انڈیا"
-                    : "Jamia Islamia Darul Uloom Mahezpur, Sanjarpur, Azamgarh, U.P., India"}
+                    ? " جامعہ اسلامیہ دار العلوم مھذب پور ،سنجر پور،اعظم گڈھ یوپی انڈیا, پن کوڈ: 223227"
+                    : "Jamia Islamia Darul Uloom Muhajjabpur, Sanjarpur, Azamgarh, UP, India, 223227"}
                 </p>
               </div>
             </div>

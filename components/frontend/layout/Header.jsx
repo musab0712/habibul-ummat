@@ -66,7 +66,8 @@ const Header = () => {
     },
     {
       id: "jamia",
-      label: language === "ur" ? "جامعه مھذب پور" : "Jamia Muhajjabpur",
+      label:
+        language === "ur" ? "دار العلوم مہذب پور" : "Darul Uloom Muhajjabpur",
       icon: FaBuilding,
       href: "/jamia",
     },
@@ -78,7 +79,7 @@ const Header = () => {
     },
     {
       id: "khanaqah",
-      label: language === "ur" ? "خانقاہ" : "Khanaqah",
+      label: language === "ur" ? "خانقاہ" : "Khanqaah",
       icon: FaHeart,
       href: "/khanaqah",
     },

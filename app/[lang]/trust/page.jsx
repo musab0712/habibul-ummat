@@ -41,38 +41,81 @@ const TrustPage = () => {
     }
   };
 
+  // const trustFeatures = [
+  //   {
+  //     icon: FaShieldAlt,
+  //     title: language === "ur" ? "شفافیت" : "Transparency",
+  //     description:
+  //       language === "ur"
+  //         ? "ہمارے تمام معاملات مکمل شفافیت کے ساتھ پیش کیے جاتے ہیں"
+  //         : "All our affairs are conducted with complete transparency",
+  //   },
+  //   {
+  //     icon: FaBalanceScale,
+  //     title: language === "ur" ? "امانت داری" : "Trustworthiness",
+  //     description:
+  //       language === "ur"
+  //         ? "خدا کے عطا کردہ مال میں مکمل امانت داری"
+  //         : "Complete trustworthiness in God-given wealth",
+  //   },
+  //   {
+  //     icon: FaUsers,
+  //     title: language === "ur" ? "اجتماعیت" : "Collective Leadership",
+  //     description:
+  //       language === "ur"
+  //         ? "تجربہ کار ٹرسٹیوں کی اجتماعی قیادت"
+  //         : "Collective leadership of experienced trustees",
+  //   },
+  //   {
+  //     icon: FaChartLine,
+  //     title: language === "ur" ? "پائیداری" : "Sustainability",
+  //     description:
+  //       language === "ur"
+  //         ? "مستقل اور پائیدار فلاحی خدمات"
+  //         : "Permanent and sustainable welfare services",
+  //   },
+  // ];
+
   const trustFeatures = [
     {
-      icon: FaShieldAlt,
-      title: language === "ur" ? "شفافیت" : "Transparency",
+      icon: FaHandHoldingHeart,
+      title: language === "ur" ? "فلاحی خدمات" : "Welfare Services",
       description:
         language === "ur"
-          ? "ہمارے تمام معاملات مکمل شفافیت کے ساتھ پیش کیے جاتے ہیں"
-          : "All our affairs are conducted with complete transparency",
+          ? "غریبوں، یتیموں، مسکینوں اور بیواؤں کی مدد"
+          : "Helping the poor, orphans, the needy and widows",
     },
     {
-      icon: FaBalanceScale,
-      title: language === "ur" ? "امانت داری" : "Trustworthiness",
+      icon: FaShieldAlt,
+      title: language === "ur" ? "قیام مکاتب " : "Establishment of Makatib",
       description:
         language === "ur"
-          ? "خدا کے عطا کردہ مال میں مکمل امانت داری"
-          : "Complete trustworthiness in God-given wealth",
+          ? "غریب دیہی علاقوں میں مکاتب کا قیام "
+          : "Establishment of Makatib in poor rural areas",
     },
     {
       icon: FaUsers,
-      title: language === "ur" ? "اجتماعیت" : "Collective Leadership",
+      title: language === "ur" ? "نظم قربانی" : "Arrangements of Qurbani",
       description:
         language === "ur"
-          ? "تجربہ کار ٹرسٹیوں کی اجتماعی قیادت"
-          : "Collective leadership of experienced trustees",
+          ? "غریب، یتیم، مسکین اور بیواؤں کے لیے قربانی کی فراہمی"
+          : "Providing Qurbani for the Poor, Orphans, Needy and Widows",
     },
     {
       icon: FaChartLine,
-      title: language === "ur" ? "پائیداری" : "Sustainability",
+      title: language === "ur" ? "نظم افطاری" : "Arrangements of Iftar",
       description:
         language === "ur"
-          ? "مستقل اور پائیدار فلاحی خدمات"
-          : "Permanent and sustainable welfare services",
+          ? "غریبوں، مسکینوں کے لیے افطاری کا انتظام و اہتمام"
+          : "Organizing and arranging for the poor and needy Iftar meals",
+    },
+    {
+      icon: FaShieldAlt,
+      title: language === "ur" ? "مکمل شفافیت" : "Construction of Mosques",
+      description:
+        language === "ur"
+          ? "غریب دیہی علاقوں میں مساجد کی تعمیر"
+          : "Construction of mosques in poor rural areas ",
     },
   ];
 
@@ -318,12 +361,12 @@ const TrustPage = () => {
             <FaHandHoldingHeart className="h-10 w-10 text-amber-300" />
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            {language === "ur" ? "ٹرسٹ" : "Trust"}
+            {language === "ur" ? "الحبیب  ٹرسٹ" : "Al-Habib Trust"}
           </h1>
           <p className="text-xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">
             {language === "ur"
-              ? "خیراتی ٹرسٹ کے مقاصد، خدمات اور کارناموں کے بارے میں مکمل معلومات"
-              : "Complete information about the charitable trust's objectives, services, and achievements"}
+              ? "الحبیب ٹرسٹ کے مقاصد، خدمات اور کارناموں کے بارے میں مکمل معلومات  "
+              : "Complete information about the Al-Habib Trust's objectives, services, and achievements"}
           </p>
         </div>
       </div>
@@ -399,7 +442,7 @@ const TrustPage = () => {
               <h2 className="text-3xl font-bold text-emerald-900 mb-8 text-center">
                 {language === "ur" ? "ٹرسٹ کی خصوصیات" : "Trust Features"}
               </h2>
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
                 {trustFeatures.map((feature, index) => {
                   const IconComponent = feature.icon;
                   return (
@@ -461,7 +504,7 @@ const TrustPage = () => {
                 <div className="grid grid-cols-2 gap-6">
                   <div className="text-center">
                     <div className="text-3xl font-bold text-white mb-1">
-                      500+
+                      1000+
                     </div>
                     <div className="text-amber-100 text-sm">
                       {language === "ur" ? "طلباء" : "Students"}
@@ -469,7 +512,7 @@ const TrustPage = () => {
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold text-white mb-1">
-                      1000+
+                      5000+
                     </div>
                     <div className="text-amber-100 text-sm">
                       {language === "ur" ? "خاندان" : "Families"}
@@ -477,7 +520,7 @@ const TrustPage = () => {
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold text-white mb-1">
-                      50+
+                      10+
                     </div>
                     <div className="text-amber-100 text-sm">
                       {language === "ur" ? "منصوبے" : "Projects"}
@@ -485,7 +528,7 @@ const TrustPage = () => {
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold text-white mb-1">
-                      15+
+                      12+
                     </div>
                     <div className="text-amber-100 text-sm">
                       {language === "ur" ? "سالوں سے" : "Years"}

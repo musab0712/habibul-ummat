@@ -521,7 +521,7 @@ const KahanqahPage = () => {
             </div>
 
             {/* Call to Action */}
-            <div className="bg-gradient-to-r from-emerald-800 to-emerald-700 rounded-3xl p-12 text-center text-white shadow-2xl">
+            {/* <div className="bg-gradient-to-r from-emerald-800 to-emerald-700 rounded-3xl p-12 text-center text-white shadow-2xl">
               <h2 className="text-3xl font-bold mb-4">
                 {language === "ur"
                   ? "روحانی سفر کا آغاز کریں"
@@ -542,7 +542,7 @@ const KahanqahPage = () => {
                     : "Spiritual Consultation"}
                 </button>
               </div>
-            </div>
+            </div> */}
           </div>
         )}
       </div>

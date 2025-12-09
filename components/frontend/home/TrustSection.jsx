@@ -15,35 +15,43 @@ const TrustSection = () => {
   const trustHighlights = [
     {
       icon: FaHandHoldingHeart,
-      title: language === "ur" ? "خیراتی خدمات" : "Charitable Services",
+      title: language === "ur" ? "فلاحی خدمات" : "Welfare Services",
       description:
         language === "ur"
-          ? "غریب طلباء اور ضرورت مند خاندانوں کی مدد"
-          : "Support for poor students and needy families",
+          ? "غریبوں، یتیموں، مسکینوں اور بیواؤں کی مدد"
+          : "Helping the poor, orphans, the needy and widows",
     },
     {
       icon: FaShieldAlt,
-      title: language === "ur" ? "مکمل شفافیت" : "Complete Transparency",
+      title: language === "ur" ? "قیام مکاتب " : "Establishment of Makatib",
       description:
         language === "ur"
-          ? "تمام معاملات میں شفافیت اور احتساب"
-          : "Transparency and accountability in all matters",
+          ? "غریب دیہی علاقوں میں مکاتب کا قیام "
+          : "Establishment of Makatib in poor rural areas",
     },
     {
       icon: FaUsers,
-      title: language === "ur" ? "اجتماعی قیادت" : "Collective Leadership",
+      title: language === "ur" ? "نظم قربانی" : "Arrangements of Qurbani",
       description:
         language === "ur"
-          ? "تجربہ کار ٹرسٹیوں کی اجتماعی قیادت"
-          : "Collective leadership of experienced trustees",
+          ? "غریب، یتیم، مسکین اور بیواؤں کے لیے قربانی کی فراہمی"
+          : "Providing Qurbani for the Poor, Orphans, Needy and Widows",
     },
     {
       icon: FaChartLine,
-      title: language === "ur" ? "پائیدار اثر" : "Sustainable Impact",
+      title: language === "ur" ? "نظم افطاری" : "Arrangements of Iftar",
       description:
         language === "ur"
-          ? "۱۵ سال سے مسلسل خدمت اور اثر"
-          : "15 years of continuous service and impact",
+          ? "غریبوں، مسکینوں کے لیے افطاری کا انتظام و اہتمام"
+          : "Organizing and arranging for the poor and needy Iftar meals",
+    },
+    {
+      icon: FaShieldAlt,
+      title: language === "ur" ? "مکمل شفافیت" : "Construction of Mosques",
+      description:
+        language === "ur"
+          ? "غریب دیہی علاقوں میں مساجد کی تعمیر"
+          : "Construction of mosques in poor rural areas ",
     },
   ];
 
@@ -56,17 +64,17 @@ const TrustSection = () => {
             <FaHandHoldingHeart className="h-8 w-8 text-white" />
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            {language === "ur" ? "خیراتی ٹرسٹ" : "Charitable Trust"}
+            {language === "ur" ? "الحبیب ٹرسٹ" : "Al-Habib Trust"}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             {language === "ur"
-              ? "مفتی حبیب اللہ قاسمی ٹرسٹ ۲۰۰۵ سے اسلامی تعلیم اور فلاح و بہبود کی خدمات فراہم کر رہا ہے"
-              : "Mufti Habibullah Qasmi Trust has been providing Islamic education and welfare services since 2005"}
+              ? "الحبیب ٹرسٹ ۲۰۱۴ سے اسلامی تعلیم اور فلاح و بہبود کی خدمات فراہم کر رہا ہے"
+              : "Al-Habib Trust has been providing Islamic education and welfare services since 2014"}
           </p>
         </div>
 
         {/* Trust Highlights Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+        <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8 mb-16">
           {trustHighlights.map((highlight, index) => {
             const IconComponent = highlight.icon;
             return (
@@ -91,7 +99,7 @@ const TrustSection = () => {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
             <div>
               <div className="text-3xl lg:text-4xl font-bold text-amber-300 mb-2">
-                500+
+                1000+
               </div>
               <div className="text-emerald-100">
                 {language === "ur" ? "طلباء" : "Students"}
@@ -99,7 +107,7 @@ const TrustSection = () => {
             </div>
             <div>
               <div className="text-3xl lg:text-4xl font-bold text-amber-300 mb-2">
-                1000+
+                5000+
               </div>
               <div className="text-emerald-100">
                 {language === "ur" ? "خاندان" : "Families"}
@@ -107,7 +115,7 @@ const TrustSection = () => {
             </div>
             <div>
               <div className="text-3xl lg:text-4xl font-bold text-amber-300 mb-2">
-                50+
+                10+
               </div>
               <div className="text-emerald-100">
                 {language === "ur" ? "منصوبے" : "Projects"}
@@ -115,7 +123,7 @@ const TrustSection = () => {
             </div>
             <div>
               <div className="text-3xl lg:text-4xl font-bold text-amber-300 mb-2">
-                15+
+                12+
               </div>
               <div className="text-emerald-100">
                 {language === "ur" ? "سالوں سے" : "Years"}

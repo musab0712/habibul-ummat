@@ -319,7 +319,9 @@ const JamiaMuhajjabpurPage = () => {
             <FaUniversity className="h-10 w-10 text-amber-300" />
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            {language === "ur" ? "جامعه مھذب پور" : "Jamia Muhajjabpur"}
+            {language === "ur"
+              ? "جامعہ اسلامیہ دار العلوم مہذب پور"
+              : "Jamia Islamia Darul Uloom Muhajjabpur"}
           </h1>
           <p className="text-xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">
             {language === "ur"
@@ -460,7 +462,7 @@ const JamiaMuhajjabpurPage = () => {
                 <div className="grid grid-cols-2 gap-6">
                   <div className="text-center">
                     <div className="text-3xl font-bold text-white mb-1">
-                      500+
+                      1000+
                     </div>
                     <div className="text-amber-100 text-sm">
                       {language === "ur" ? "طلباء" : "Students"}
@@ -468,7 +470,7 @@ const JamiaMuhajjabpurPage = () => {
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold text-white mb-1">
-                      25+
+                      35+
                     </div>
                     <div className="text-amber-100 text-sm">
                       {language === "ur" ? "اساتذہ" : "Teachers"}
@@ -476,7 +478,7 @@ const JamiaMuhajjabpurPage = () => {
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold text-white mb-1">
-                      1000+
+                      2000+
                     </div>
                     <div className="text-amber-100 text-sm">
                       {language === "ur" ? "فارغ التحصیل" : "Graduates"}
@@ -484,7 +486,7 @@ const JamiaMuhajjabpurPage = () => {
                   </div>
                   <div className="text-center">
                     <div className="text-3xl font-bold text-white mb-1">
-                      35+
+                      32+
                     </div>
                     <div className="text-amber-100 text-sm">
                       {language === "ur" ? "سالوں سے" : "Years"}
@@ -526,7 +528,7 @@ const JamiaMuhajjabpurPage = () => {
             </div>
 
             {/* Admission Information */}
-            <div className="bg-gradient-to-r from-emerald-800 to-emerald-700 rounded-3xl p-12 text-center text-white shadow-2xl">
+            {/* <div className="bg-gradient-to-r from-emerald-800 to-emerald-700 rounded-3xl p-12 text-center text-white shadow-2xl">
               <h2 className="text-3xl font-bold mb-4">
                 {language === "ur"
                   ? "داخلہ کی معلومات"
@@ -545,7 +547,7 @@ const JamiaMuhajjabpurPage = () => {
                   {language === "ur" ? "مزید معلومات" : "More Information"}
                 </button>
               </div>
-            </div>
+            </div> */}
           </div>
         )}
       </div>

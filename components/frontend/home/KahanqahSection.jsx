@@ -51,7 +51,7 @@ const KahanqahSection = () => {
             <FaMosque className="h-8 w-8 text-white" />
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            {language === "ur" ? "روحانی خانقاہ" : "Spiritual Kahanqah"}
+            {language === "ur" ? "خانقاہ" : "Khanqaah"}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             {language === "ur"
@@ -94,7 +94,7 @@ const KahanqahSection = () => {
             </div>
             <div>
               <div className="text-3xl lg:text-4xl font-bold text-amber-300 mb-2">
-                50+
+                20,000+
               </div>
               <div className="text-emerald-100">
                 {language === "ur" ? "بیعت یافتہ" : "Spiritual Disciples"}
@@ -102,7 +102,7 @@ const KahanqahSection = () => {
             </div>
             <div>
               <div className="text-3xl lg:text-4xl font-bold text-amber-300 mb-2">
-                7
+                3
               </div>
               <div className="text-emerald-100">
                 {language === "ur" ? "روزانہ محافل" : "Daily Gatherings"}
@@ -110,7 +110,7 @@ const KahanqahSection = () => {
             </div>
             <div>
               <div className="text-3xl lg:text-4xl font-bold text-amber-300 mb-2">
-                15+
+                12+
               </div>
               <div className="text-emerald-100">
                 {language === "ur" ? "سالوں سے" : "Years Serving"}
@@ -125,14 +125,14 @@ const KahanqahSection = () => {
             <p className="text-lg text-gray-600 mb-8">
               {language === "ur"
                 ? "خانقاہ میں آئیں اور اپنے روحانی سفر کا آغاز کریں۔ ذکر و عبادت کی برکات سے اپنی زندگی کو منور کریں۔"
-                : "Visit the Kahanqah and begin your spiritual journey. Illuminate your life with the blessings of remembrance and worship."}
+                : "Visit the Khanqaah and begin your spiritual journey. Illuminate your life with the blessings of remembrance and worship"}
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link
                 href={`/${language}/khanaqah`}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
               >
-                {language === "ur" ? "خانقاہ کے بارے میں" : "About Kahanqah"}
+                {language === "ur" ? "خانقاہ کے بارے میں" : "About Khanqaah"}
               </Link>
               {/* <button className="bg-white text-emerald-600 hover:bg-emerald-50 border-2 border-emerald-600 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300">
                 {language === "ur" ? "روحانی مشورہ" : "Spiritual Consultation"}
