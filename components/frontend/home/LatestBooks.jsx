@@ -7,6 +7,7 @@ import {
   FaArrowRight,
   FaCalendar,
   FaSpinner,
+  FaBalanceScale,
 } from "react-icons/fa";
 import { useLanguage } from "../../../context/LanguageContext";
 
@@ -226,16 +227,17 @@ const LatestBooks = () => {
                   <div className="flex flex-col gap-3 w-full">
                     <button
                       onClick={() => window.open(book.pdfUrl, "_blank")}
-                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded-lg font-semibold transition-all duration-300"
+                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-4 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center"
                     >
+                      <FaBalanceScale className="h-4 w-4 mr-1" />
                       {language === "ur" ? "پڑھیں" : "Read"}
                     </button>
-                    <button
+                    {/* <button
                       onClick={() => window.open(book.pdfUrl, "_blank")}
                       className="w-full bg-amber-500 hover:bg-amber-600 text-white py-2 px-4 rounded-lg font-semibold transition-all duration-300"
                     >
                       {language === "ur" ? "ڈاؤن لوڈ کریں" : "Download"}
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               </div>

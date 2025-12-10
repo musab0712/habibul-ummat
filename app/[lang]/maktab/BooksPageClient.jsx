@@ -8,6 +8,7 @@ import {
   FaFilter,
   FaSpinner,
   FaCalendar,
+  FaBalanceScale,
 } from "react-icons/fa";
 import { useLanguage } from "../../../context/LanguageContext";
 
@@ -231,16 +232,10 @@ const BooksPageClient = () => {
                         onClick={() => handleReadBook(book.pdfUrl)}
                         className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-3 rounded-lg font-semibold transition-all duration-300 text-sm flex items-center justify-center"
                       >
-                        <svg
-                          className="h-4 w-4 mr-1"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path d="M3 4a2 2 0 012-2h6a2 2 0 012 2v12a1 1 0 11-2 0V4H5v10a1 1 0 11-2 0V4z" />
-                        </svg>
+                        <FaBalanceScale className="h-4 w-4 mr-1" />
                         {language === "ur" ? "پڑھیں" : "Read"}
                       </button>
-                      <button
+                      {/* <button
                         onClick={() => window.open(book.pdfUrl, "_blank")}
                         className="w-full bg-amber-500 hover:bg-amber-600 text-white py-2 px-3 rounded-lg font-semibold transition-all duration-300 text-sm flex items-center justify-center"
                       >
@@ -255,7 +250,7 @@ const BooksPageClient = () => {
                           />
                         </svg>
                         {language === "ur" ? "ڈاؤن لوڈ کریں" : "Download"}
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                 </div>

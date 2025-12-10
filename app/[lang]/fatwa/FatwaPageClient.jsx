@@ -215,13 +215,13 @@ const FatwaPageClient = () => {
                         <FaBalanceScale className="h-4 w-4 mr-1" />
                         {language === "ur" ? "مطالعہ کریں" : "Read"}
                       </button>
-                      <button
+                      {/* <button
                         onClick={() => window.open(fatwa.pdfUrl, "_blank")}
                         className="w-full bg-amber-500 hover:bg-amber-600 text-white py-2 px-3 rounded-lg font-semibold transition-all duration-300 text-sm flex items-center justify-center"
                       >
                         <FaDownload className="h-4 w-4 mr-1" />
                         {language === "ur" ? "ڈاؤن لوڈ کریں" : "Download"}
-                      </button>
+                      </button> */}
                     </div>
                   </div>
                 </div>
