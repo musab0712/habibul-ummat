@@ -88,7 +88,7 @@ const JamiaMuhajjabpurSection = () => {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
             <div>
               <div className="text-3xl lg:text-4xl font-bold text-amber-300 mb-2">
-                5000+
+                1000+
               </div>
               <div className="text-emerald-100">
                 {language === "ur" ? "طلباء" : "Students"}

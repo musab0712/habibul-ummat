@@ -47,7 +47,7 @@ const TrustSection = () => {
     },
     {
       icon: FaShieldAlt,
-      title: language === "ur" ? "مکمل شفافیت" : "Construction of Mosques",
+      title: language === "ur" ? "تعمیر مساجد" : "Construction of Mosques",
       description:
         language === "ur"
           ? "غریب دیہی علاقوں میں مساجد کی تعمیر"

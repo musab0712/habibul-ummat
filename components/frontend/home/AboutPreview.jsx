@@ -140,12 +140,12 @@ const AboutPreview = () => {
                 <FiTarget className="h-6 w-6 text-amber-300 mb-2" />
                 <div className="text-xl font-bold">5000+</div>
                 <div className="text-emerald-100 text-xs mt-1">
-                  {language === "ur" ? "طلباء" : "Students"}
+                  {language === "ur" ? "شاگرد" : "Students"}
                 </div>
               </div>
               <div className="bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl p-4 text-white text-center flex flex-col items-center justify-center">
                 <FiTarget className="h-6 w-6 text-white mb-2" />
-                <div className="text-xl font-bold">80+</div>
+                <div className="text-xl font-bold">100+</div>
                 <div className="text-amber-100 text-xs mt-1">
                   {language === "ur" ? "خلفاء" : "Khulfa"}
                 </div>
