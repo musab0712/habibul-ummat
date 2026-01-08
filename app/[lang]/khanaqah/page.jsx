@@ -163,7 +163,7 @@ const KahanqahPage = () => {
       // ---------- Paragraph ----------
       if (node.type === "paragraph") {
         const alignClass = getAlignmentClass(node.format);
-        const baseClasses = "mb-6 text-gray-700 leading-relaxed text-lg";
+        const baseClasses = "mb-6 text-gray-700 leading-10 text-lg";
         const classes = alignClass
           ? `${baseClasses} ${alignClass}`
           : baseClasses;

@@ -257,7 +257,7 @@ const Footer = () => {
                 <p className="font-semibold text-amber-300 text-sm">
                   {t.callUs}
                 </p>
-                <p className="text-emerald-100 font-medium">9936368346</p>
+                <p className="text-emerald-100 font-medium">9936368546</p>
               </div>
             </div>
 

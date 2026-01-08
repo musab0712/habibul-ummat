@@ -167,7 +167,7 @@ const JamiaMuhajjabpurPage = () => {
       // ---------- Paragraph ----------
       if (node.type === "paragraph") {
         const alignClass = getAlignmentClass(node.format);
-        const baseClasses = "mb-6 text-gray-700 leading-relaxed text-lg";
+        const baseClasses = "mb-6 text-gray-700 leading-10 text-lg";
         const classes = alignClass
           ? `${baseClasses} ${alignClass}`
           : baseClasses;
@@ -497,7 +497,7 @@ const JamiaMuhajjabpurPage = () => {
             </div>
 
             {/* Mission & Vision */}
-            <div className="grid md:grid-cols-2 gap-8">
+            {/* <div className="grid md:grid-cols-2 gap-8">
               <div className="bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-2xl p-8 text-white shadow-2xl">
                 <div className="flex items-center mb-6">
                   <FaGraduationCap className="h-8 w-8 text-amber-300 mr-3" />
@@ -525,7 +525,7 @@ const JamiaMuhajjabpurPage = () => {
                     : "To establish an educational institution that is adorned with both Islamic sciences and modern knowledge. We want to prepare a generation that succeeds in both religion and worldly life."}
                 </p>
               </div>
-            </div>
+            </div> */}
 
             {/* Admission Information */}
             {/* <div className="bg-gradient-to-r from-emerald-800 to-emerald-700 rounded-3xl p-12 text-center text-white shadow-2xl">

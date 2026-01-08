@@ -152,7 +152,7 @@ const AboutPage = () => {
       // ---------- Paragraph ----------
       if (node.type === "paragraph") {
         const alignClass = getAlignmentClass(node.format);
-        const baseClasses = "mb-6 text-gray-700 leading-relaxed text-lg";
+        const baseClasses = "mb-6 text-gray-700 leading-10 text-lg";
         const classes = alignClass
           ? `${baseClasses} ${alignClass}`
           : baseClasses;
@@ -408,10 +408,10 @@ const AboutPage = () => {
                   <FaHeart className="h-6 w-6 text-white mr-3" />
                   {language === "ur" ? "پیغام" : "Message"}
                 </h3>
-                <blockquote className="text-amber-100 italic text-lg leading-relaxed">
+                <blockquote className="text-amber-100 italic text-lg leading-10 ">
                   {language === "ur"
-                    ? '"علم حاصل کرنا ہر مسلمان مرد اور عورت پر فرض ہے۔ میری دعا ہے کہ ہم سب مل کر اسلامی تعلیمات کو آگے بڑھائیں اور امت مسلمہ کو علم کی روشنی سے منور کریں۔"'
-                    : '"Seeking knowledge is obligatory upon every Muslim man and woman. My prayer is that we all work together to advance Islamic teachings and illuminate the Muslim Ummah with the light of knowledge."'}
+                    ? '" علم کا حصول ہر مسلمان مرد اور عورت پر فرض ہے؛ یہ وہ فریضہ ہے جو انسان کو پہچان عطا کرتا، فکر کو جِلا بخشتا اور زندگی کو مقصد سے ہم کنار کرتا ہے۔ علم کے بغیر نہ دین کی صحیح سمجھ ممکن ہے اور نہ عمل میں استقامت اور اخلاص کی پختگی۔ میری دلی دعا اور مخلصانہ آرزو ہے کہ ہم سب مل کر اسلامی تعلیمات کے فروغ کا فریضہ ادا کریں، علم کو اپنی زندگیوں کا زادِ راہ بنائیں، اور اس کی روشنی سے امتِ مسلمہ کے دلوں اور گھروں کو منور کریں۔ جب علم شعور بن جائے اور شعور عمل میں ڈھل جائے تو امت کا ہر فرد خیر، ہدایت اور اصلاح کا ذریعہ بن جاتا ہے—اور یہی وہ راستہ ہے جو ہمیں عزت، وقار اور فلاح کی طرف لے جاتا ہے۔"'
+                    : '"The pursuit of knowledge is an obligation upon every Muslim man and woman; it is a duty that grants identity, refines thought, and connects life to a higher purpose. Without knowledge, neither a sound understanding of religion is possible nor steadfastness and sincerity in practice can be achieved. It is my heartfelt prayer and sincere aspiration that we may all work together to promote Islamic teachings, make knowledge the guiding provision of our lives, and illuminate the hearts and homes of the Muslim Ummah with its light. When knowledge rises to the level of awareness, and awareness is translated into action, every individual of the Ummah becomes a source of goodness, guidance, and reform—and this is the path that leads to honor, dignity, and true success."'}
                 </blockquote>
               </div>
             </div>
@@ -425,10 +425,10 @@ const AboutPage = () => {
                     {language === "ur" ? "ہمارا مشن" : "Our Mission"}
                   </h3>
                 </div>
-                <p className="text-emerald-100 leading-relaxed text-lg">
+                <p className="text-emerald-100 leading-10 text-lg">
                   {language === "ur"
-                    ? "قرآن و سنت کی اصل تعلیمات کو عام کرنا اور امت مسلمہ کو صحیح اسلامی علم سے روشناس کرانا۔ ہر مسلمان تک اسلامی علم کی رسائی کو آسان بنانا، چاہے وہ کہیں بھی ہو اور اس کے اقتصادی حالات کیسے بھی ہوں۔ مستند اسلامی علم کو جدید ذرائع کے ذریعے ہر گھر تک پہنچانا۔"
-                    : "To spread the authentic teachings of Quran and Sunnah and familiarize the Muslim Ummah with correct Islamic knowledge. To make Islamic knowledge accessible to every Muslim, regardless of their geographical location or economic circumstances. To deliver authentic Islamic knowledge to every home through modern means."}
+                    ? "ہمارا مشن یہ ہے کہ قرآنِ مجید اور سنتِ رسول ﷺ کی اصل، خالص اور مستند تعلیمات کو عام کیا جائے، تاکہ دین اپنی حقیقی روح، توازن اور جامعیت کے ساتھ لوگوں کے دلوں اور زندگیوں میں اتر سکے۔ ہم چاہتے ہیں کہ اسلامی علم محض مخصوص حلقوں تک محدود نہ رہے، بلکہ امتِ مسلمہ کے ہر فرد تک سہل، واضح اور قابلِ فہم صورت میں پہنچے۔ ہماری یہ کوشش ہے کہ مسلمان صحیح اسلامی علم سے روشناس ہوں—ایسا علم جو افراط و تفریط سے پاک ہو، جو فکر کو سنوارے، عمل کو درست کرے، اور اخلاق و کردار میں پختگی پیدا کرے۔ ہم اس علم کے ذریعے امت کو فکری الجھنوں، غلط تعبیرات اور غیر مستند افکار سے محفوظ رکھنا چاہتے ہیں، اور قرآن و سنت کی روشنی میں ایک باخبر، باعمل اور باوقار مسلم معاشرہ تشکیل دینا چاہتے ہیں۔ ہمارا یقین ہے کہ جب اسلامی علم ہر مسلمان کی دسترس میں ہوگا تو ایمان میں بصیرت، عبادات میں اخلاص، معاملات میں عدل اور معاشرت میں حسن خود بخود فروغ پائے گا۔ یہی وہ مقصد ہے جس کے لیے ہم نے علم کی اشاعت، رہنمائی کی فراہمی اور دین کی صحیح سمجھ کو اپنی جدوجہد کا مرکز بنایا ہے—تاکہ امت دوبارہ علم، عمل اور ہدایت کے راستے پر گامزن ہو سکے۔"
+                    : "Our mission is to disseminate the authentic, pure, and reliable teachings of the Qur’an and the Sunnah of the Messenger of Allah ﷺ, so that Islam may be understood and lived in its true spirit, balance, and comprehensiveness—finding its way into people’s hearts and everyday lives. We seek to ensure that Islamic knowledge is not confined to select circles, but is made accessible, clear, and easily understood by every member of the Muslim Ummah. Our endeavor is to acquaint Muslims with sound Islamic knowledge—knowledge that is free from extremism and negligence, that refines thought, rectifies action, and nurtures moral and spiritual integrity. Through this knowledge, we aim to protect the Ummah from intellectual confusion, erroneous interpretations, and unreliable ideas, and to help build an informed, practicing, and dignified Muslim society under the guidance of the Qur’an and Sunnah. We firmly believe that when authentic Islamic knowledge becomes accessible to every Muslim, it naturally fosters clarity of faith, sincerity in worship, justice in dealings, and excellence in social conduct. It is for this very purpose that we have placed the dissemination of knowledge, the provision of guidance, and the correct understanding of Islam at the heart of our mission—so that the Ummah may once again walk the path of knowledge, action, and divine guidance."}
                 </p>
               </div>
 
@@ -439,10 +439,10 @@ const AboutPage = () => {
                     {language === "ur" ? "ہمارا ویژن" : "Our Vision"}
                   </h3>
                 </div>
-                <p className="text-amber-100 leading-relaxed text-lg">
+                <p className="text-amber-100 leading-10  text-lg">
                   {language === "ur"
-                    ? "ایسی عالمی برادری تشکیل دینا جو اسلامی علم سے آراستہ ہو اور اسلامی اقدار پر عمل پیرا ہو۔ ہر گھر کو علم کی روشنی سے منور کرنا۔ ایسا معاشرہ تعمیر کرنا جہاں ہر فرد اسلامی تعلیمات کے مطابق زندگی گزار سکے۔"
-                    : "To build a global community that is adorned with Islamic knowledge and practices Islamic values. To illuminate every home with the light of knowledge. To build a society where every individual can live according to Islamic teachings."}
+                    ? "ہمارا ویژن یہ ہے کہ ایک ایسی آفاقی برادری وجود میں آئے جو صحیح اسلامی علم سے آراستہ، فہمِ دین سے بہرہ مند، اور اسلامی اقدار کی عملی تصویر ہو۔ ہم ایک ایسے معاشرے کا خواب دیکھتے ہیں جہاں علم محض معلومات نہ رہے، بلکہ شعور بن کر زندگی کے ہر گوشے میں رہنمائی کرے، اور جہاں ایمان، اخلاق اور عمل باہم جڑ کر فرد اور اجتماع دونوں کو سنواریں۔ ہماری آرزو ہے کہ علمِ دین کی روشنی ہر گھر تک پہنچے، ہر دل کو منور کرے، اور ہر نسل کو اپنی شناخت، ذمہ داری اور مقصدِ حیات سے آگاہ کرے۔ جب گھروں میں قرآن و سنت کی خوشبو بسنے لگے گی تو خاندان مضبوط ہوں گے، معاشرے باوقار بنیں گے، اور امت اپنی فکری و اخلاقی خود مختاری دوبارہ حاصل کر لے گی۔ ہمارا ویژن ایک ایسے مستقبل کی تشکیل ہے جہاں اسلامی علم روشنی بن کر اندھیروں کو چیر دے، اقدار کردار میں ڈھل جائیں، اور امتِ مسلمہ علم و عمل کے ساتھ دنیا کے لیے خیر، امن اور رہنمائی کا ذریعہ بن جائے"
+                    : "Our vision is to see the emergence of a truly global community enriched with authentic Islamic knowledge, grounded in a sound understanding of the faith, and embodying Islamic values in practice. We envision a society where knowledge is not confined to information alone, but rises to the level of consciousness—guiding every sphere of life—and where faith, ethics, and action are seamlessly woven together to uplift both individuals and communities. We aspire for the light of religious knowledge to reach every home, illuminate every heart, and awaken every generation to its identity, responsibilities, and purpose in life. When the fragrance of the Qur’an and Sunnah permeates households, families grow stronger, societies gain dignity, and the Ummah regains its intellectual and moral self-confidence. Our vision is the shaping of a future in which Islamic knowledge shines as a guiding light through the darkness, values are transformed into character, and the Muslim Ummah—rooted in knowledge and action—becomes a source of goodness, peace, and guidance for the world."}
                 </p>
               </div>
             </div>

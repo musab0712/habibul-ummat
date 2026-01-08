@@ -35,6 +35,7 @@ const DirectionHandler = () => {
       [dir="rtl"] {
         text-align: right;
         direction: rtl;
+        font-family: var(--font-urdu), sans-serif;
       }
       [dir="rtl"] .text-left {
         text-align: right;
