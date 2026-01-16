@@ -69,13 +69,14 @@ const Header = () => {
         },
         {
           id: "jamia-dept",
-          label: language === "ur" ? "شاخیں" : "Jamiah Departments",
+          label:
+            language === "ur" ? "تعارف شعبھاءِ جامعہ" : "Jamiah Departments",
           icon: FaBuilding,
           href: "/jamia/departments",
         },
         {
           id: "jamia-gallery",
-          label: language === "ur" ? "گیلری" : "Jamiah Gallery",
+          label: language === "ur" ? "تصاویرِ جامعہ" : "Jamiah Gallery",
           icon: FaImage,
           href: "/jamia/gallery",
         },
@@ -89,25 +90,31 @@ const Header = () => {
       dropdown: [
         {
           id: "trust-intro",
-          label: language === "ur" ? "تعارف" : "Introduction",
+          label:
+            language === "ur"
+              ? "تعارف الحبیب ٹرسٹ"
+              : "Al-Habib Trust Introduction",
           icon: FaInfoCircle,
           href: "/trust",
         },
         {
           id: "trust-aims",
-          label: language === "ur" ? "مقاصد و اہداف" : "Aims & Objectives",
+          label:
+            language === "ur"
+              ? "اغراض ومقاصد ٹرسٹ"
+              : "Aims & Objectives of Trust",
           icon: FaFileAlt,
           href: "/trust/aims",
         },
         {
           id: "trust-dept",
-          label: language === "ur" ? "شاخیں" : "Departments",
+          label: language === "ur" ? "شعبھاءِ ٹرسٹ" : "Trust Departments",
           icon: FaBuilding,
           href: "/trust/departments",
         },
         {
           id: "trust-gallery",
-          label: language === "ur" ? "گیلری" : "Trust Gallery",
+          label: language === "ur" ? "تصاویرِ ٹرسٹ" : "Trust Gallery",
           icon: FaImage,
           href: "/trust/gallery",
         },
@@ -121,7 +128,8 @@ const Header = () => {
       dropdown: [
         {
           id: "maktab-intro",
-          label: language === "ur" ? "تعارف" : "Introduction",
+          label:
+            language === "ur" ? "مکتہ حبیب الامت" : "Maktabah Habib Al-Ummah",
           icon: FaInfoCircle,
           href: "/maktab/intro",
         },
@@ -147,13 +155,14 @@ const Header = () => {
       dropdown: [
         {
           id: "khanaqah-intro",
-          label: language === "ur" ? "تعارف" : "Introduction",
+          label:
+            language === "ur" ? "خانقاہ حبیب الامت" : "Khanqaah Introduction",
           icon: FaInfoCircle,
           href: "/khanaqah",
         },
         {
           id: "khanaqah-gallery",
-          label: language === "ur" ? "گیلری" : "Khanqah Gallery",
+          label: language === "ur" ? "تصاویرِ خانقاہ" : "Khanqah Gallery",
           icon: FaImage,
           href: "/khanaqah/gallery",
         },

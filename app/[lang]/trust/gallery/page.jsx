@@ -120,13 +120,13 @@ export default function GalleryPage() {
             <FaImages className="h-10 w-10 text-amber-300" />
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            {language === "ur" ? "گیلری" : "Trust Gallery"}
+            {language === "ur" ? "تصاویرِ ٹرسٹ" : "Trust Gallery"}
           </h1>
-          <p className="text-xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">
+          {/* <p className="text-xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">
             {language === "ur"
               ? "مفتی حبیب اللہ قاسمی کی خدمات، تقاریب اور یادگار لمحات کی تصاویر"
               : "Photos of Mufti Habibullah Qasmi's services, events, and memorable moments"}
-          </p>
+          </p> */}
         </div>
       </div>
 

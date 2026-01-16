@@ -361,7 +361,7 @@ const TrustPage = () => {
             <FaHandHoldingHeart className="h-10 w-10 text-amber-300" />
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            {language === "ur" ? "الحبیب  ٹرسٹ" : "Al-Habib Trust"}
+            {language === "ur" ? "تعارف الحبیب ٹرسٹ" : "Al-Habib Trust"}
           </h1>
           <p className="text-xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">
             {language === "ur"

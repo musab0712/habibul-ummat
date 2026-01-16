@@ -151,7 +151,7 @@ const JamiaDepartmentPage = () => {
         const href = node.url || node.href || "#";
         const inner = (node.children || []).map(renderNode).join("");
         return `<a href="${escapeHtml(
-          href
+          href,
         )}" class="text-emerald-600 hover:text-emerald-800 underline decoration-2 underline-offset-2 transition-colors duration-200 font-medium" target="_blank" rel="noopener noreferrer">${inner}</a>`;
       }
 
@@ -191,7 +191,7 @@ const JamiaDepartmentPage = () => {
             ? allowedStyle
             : allowedStyle + ";";
           return `<span style="${escapeHtml(
-            styleAttr
+            styleAttr,
           )}">${innerFormatted}</span>`;
         } else {
           // No allowed inline style, just return formatted text
@@ -240,9 +240,7 @@ const JamiaDepartmentPage = () => {
             <FaUniversity className="h-10 w-10 text-amber-300" />
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            {language === "ur"
-              ? "جامعہ اسلامیہ دار العلوم مہذب پور"
-              : "Maktaba Introduction"}
+            {language === "ur" ? "مکتہ حبیب الامت" : "Maktabah Habib Al-Ummah"}
           </h1>
           <p className="text-xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">
             {language === "ur"

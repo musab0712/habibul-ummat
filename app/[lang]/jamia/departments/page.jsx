@@ -240,15 +240,13 @@ const JamiaDepartmentPage = () => {
             <FaUniversity className="h-10 w-10 text-amber-300" />
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            {language === "ur"
-              ? "جامعہ اسلامیہ دار العلوم مہذب پور"
-              : "Jamia Departments"}
+            {language === "ur" ? "تعارف شعبھاءِ جامعہ" : "Jamia Departments"}
           </h1>
-          <p className="text-xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">
+          {/* <p className="text-xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">
             {language === "ur"
               ? "اسلامی علوم و فنون کا عظیم مرکز جہاں علم و عمل کی روشنی پھیلتی ہے"
               : "The great center of Islamic sciences and arts where the light of knowledge and practice spreads"}
-          </p>
+          </p> */}
         </div>
       </div>
 
