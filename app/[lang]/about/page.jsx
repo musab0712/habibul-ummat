@@ -304,7 +304,9 @@ const AboutPage = () => {
             <FaUser className="h-10 w-10 text-amber-300" />
           </div>
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            {language === "ur" ? "تعارف" : "About"}
+            {language === "ur"
+              ? "تعارفِ حبیب الامت"
+              : "Introduction to Habib al-Ummah"}
           </h1>
           <p className="text-xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">
             {language === "ur"
@@ -408,7 +410,7 @@ const AboutPage = () => {
                   <FaHeart className="h-6 w-6 text-white mr-3" />
                   {language === "ur" ? "پیغام" : "Message"}
                 </h3>
-                <blockquote className="text-amber-100 italic text-lg leading-10 ">
+                <blockquote className="text-amber-100 text-lg leading-10 ">
                   {language === "ur"
                     ? '" علم کا حصول ہر مسلمان مرد اور عورت پر فرض ہے؛ یہ وہ فریضہ ہے جو انسان کو پہچان عطا کرتا، فکر کو جِلا بخشتا اور زندگی کو مقصد سے ہم کنار کرتا ہے۔ علم کے بغیر نہ دین کی صحیح سمجھ ممکن ہے اور نہ عمل میں استقامت اور اخلاص کی پختگی۔ میری دلی دعا اور مخلصانہ آرزو ہے کہ ہم سب مل کر اسلامی تعلیمات کے فروغ کا فریضہ ادا کریں، علم کو اپنی زندگیوں کا زادِ راہ بنائیں، اور اس کی روشنی سے امتِ مسلمہ کے دلوں اور گھروں کو منور کریں۔ جب علم شعور بن جائے اور شعور عمل میں ڈھل جائے تو امت کا ہر فرد خیر، ہدایت اور اصلاح کا ذریعہ بن جاتا ہے—اور یہی وہ راستہ ہے جو ہمیں عزت، وقار اور فلاح کی طرف لے جاتا ہے۔"'
                     : '"The pursuit of knowledge is an obligation upon every Muslim man and woman; it is a duty that grants identity, refines thought, and connects life to a higher purpose. Without knowledge, neither a sound understanding of religion is possible nor steadfastness and sincerity in practice can be achieved. It is my heartfelt prayer and sincere aspiration that we may all work together to promote Islamic teachings, make knowledge the guiding provision of our lives, and illuminate the hearts and homes of the Muslim Ummah with its light. When knowledge rises to the level of awareness, and awareness is translated into action, every individual of the Ummah becomes a source of goodness, guidance, and reform—and this is the path that leads to honor, dignity, and true success."'}
@@ -478,7 +480,7 @@ const AboutPage = () => {
             </div>
 
             {/* Call to Action */}
-            <div className="bg-gradient-to-r from-emerald-800 to-emerald-700 rounded-3xl p-12 text-center text-white shadow-2xl">
+            {/* <div className="bg-gradient-to-r from-emerald-800 to-emerald-700 rounded-3xl p-12 text-center text-white shadow-2xl">
               <h2 className="text-3xl font-bold mb-4">
                 {language === "ur"
                   ? "علم کا سفر جاری رکھیں"
@@ -501,7 +503,7 @@ const AboutPage = () => {
                   </button>
                 </Link>
               </div>
-            </div>
+            </div> */}
           </div>
         )}
       </div>

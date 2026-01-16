@@ -493,7 +493,7 @@ export default function GalleryPage() {
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                   />
                 </div>
-                {(image.title || image.description) && (
+                {/* {(image.title || image.description) && (
                   <div className="p-4">
                     {image.title && (
                       <h3 className="font-medium text-gray-900 truncate">
@@ -506,7 +506,7 @@ export default function GalleryPage() {
                       </p>
                     )}
                   </div>
-                )}
+                )} */}
               </div>
             ))}
           </div>

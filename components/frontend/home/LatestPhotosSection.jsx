@@ -17,11 +17,11 @@ const LatestPhotosSection = () => {
   const fetchLatestImages = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/gallery?limit=6");
+      const response = await fetch("/api/gallery?limit=4");
 
       if (response.ok) {
         const images = await response.json();
-        setLatestImages(images.slice(0, 6)); // Get latest 6 images
+        setLatestImages(images.slice(0, 4)); // Get latest 4 images
       }
     } catch (error) {
       console.error("Error fetching latest images:", error);
@@ -85,7 +85,7 @@ const LatestPhotosSection = () => {
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                     />
                   </div>
-                  {(image.title || image.description) && (
+                  {/* {(image.title || image.description) && (
                     <div className="p-4">
                       {image.title && (
                         <h3 className="font-medium text-gray-900 truncate">
@@ -98,7 +98,7 @@ const LatestPhotosSection = () => {
                         </p>
                       )}
                     </div>
-                  )}
+                  )} */}
                 </div>
               ))}
             </div>

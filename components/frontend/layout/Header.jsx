@@ -51,7 +51,7 @@ const Header = () => {
     },
     {
       id: "about",
-      label: language === "ur" ? "ہمارے بارے میں" : "About",
+      label: language === "ur" ? "تعارفِ حبیب الامت" : "About",
       icon: FaInfoCircle,
       href: "/about",
     },
@@ -63,13 +63,13 @@ const Header = () => {
       dropdown: [
         {
           id: "jamia-intro",
-          label: language === "ur" ? "تعارف" : "Introduction",
+          label: language === "ur" ? "تعارفِ جامعہ" : "Jamiah Introduction",
           icon: FaInfoCircle,
           href: "/jamia",
         },
         {
           id: "jamia-dept",
-          label: language === "ur" ? "شاخیں" : "Departments",
+          label: language === "ur" ? "شاخیں" : "Jamiah Departments",
           icon: FaBuilding,
           href: "/jamia/departments",
         },
