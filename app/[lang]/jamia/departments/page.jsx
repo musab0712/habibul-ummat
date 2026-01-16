@@ -16,7 +16,7 @@ const JamiaDepartmentPage = () => {
   const fetchJamiaData = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/jamia");
+      const response = await fetch("/api/jamia-department");
       const result = await response.json();
 
       if (result.success) {
@@ -242,7 +242,7 @@ const JamiaDepartmentPage = () => {
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
             {language === "ur"
               ? "جامعہ اسلامیہ دار العلوم مہذب پور"
-              : "Jamia Islamia Darul Uloom Muhajjabpur"}
+              : "Jamia Departments"}
           </h1>
           <p className="text-xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">
             {language === "ur"

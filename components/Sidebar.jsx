@@ -27,18 +27,38 @@ export default function Sidebar() {
 
   const menuItems = [
     { icon: <FiHome />, text: "Dashboard", path: "/admin/dashboard" },
+    { icon: <FiSliders />, text: "Sliders", path: "/admin/slider" },
     // { icon: <FiHome />, text: "Home", path: "/admin/home" },
-    { icon: <FiBook />, text: "Maktaba", path: "/admin/maktaba" },
     { icon: <FiInfo />, text: "About", path: "/admin/about" },
-    { icon: <FiMail />, text: "Contact", path: "/admin/contact" },
+    { icon: <FiInfo />, text: "Jamia", path: "/admin/jamia" },
+    {
+      icon: <FiInfo />,
+      text: "Jamia Departments",
+      path: "/admin/jamia/department",
+    },
+    { icon: <FiImage />, text: "Jamia Gallery", path: "/admin/jamia/gallery" },
     { icon: <FiInfo />, text: "Trust", path: "/admin/trust" },
+    { icon: <FiInfo />, text: "Trust Aims", path: "/admin/trust/aims" },
+    {
+      icon: <FiInfo />,
+      text: "Trust Departments",
+      path: "/admin/trust/department",
+    },
+    { icon: <FiImage />, text: "Trust Gallery", path: "/admin/trust/gallery" },
+    { icon: <FiInfo />, text: "Maktabah", path: "/admin/maktaba/intro" },
+    { icon: <FiBook />, text: "Books", path: "/admin/maktaba" },
     { icon: <FiFileText />, text: "Fatwa", path: "/admin/fatwa" },
     { icon: <FiInfo />, text: "Khanaqah", path: "/admin/khanaqah" },
-    { icon: <FiSliders />, text: "Sliders", path: "/admin/slider" },
-    { icon: <FiInfo />, text: "Jamia", path: "/admin/jamia" },
-    { icon: <FiMail />, text: "Contact Data", path: "/admin/contacts" },
+    {
+      icon: <FiImage />,
+      text: "Khanaqah Gallery",
+      path: "/admin/khanaqah/gallery",
+    },
     { icon: <FiImage />, text: "Photos", path: "/admin/photos" },
     { icon: <FiVideo />, text: "Videos", path: "/admin/videos" },
+    { icon: <FiMail />, text: "Contact Data", path: "/admin/contacts" },
+    { icon: <FiMail />, text: "Contact", path: "/admin/contact" },
+
     // { icon: <FiSettings />, text: "Settings", path: "/admin/settings" },
   ];
 
