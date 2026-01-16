@@ -27,11 +27,14 @@ const Header = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const dropdownRef = useRef(null);
 
-  // Close dropdown when clicking outside
+  // Close dropdown when clicking outside (only for desktop)
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setOpenDropdown(null);
+        // Only close dropdown on desktop, not on mobile menu
+        if (window.innerWidth >= 1280) {
+          setOpenDropdown(null);
+        }
       }
     };
 
@@ -53,41 +56,114 @@ const Header = () => {
       href: "/about",
     },
     {
+      id: "jamia",
+      label: language === "ur" ? "دار العلوم مہذب پور" : "Jamiah ",
+      icon: FaBuilding,
+      // href: "/jamia",
+      dropdown: [
+        {
+          id: "jamia-intro",
+          label: language === "ur" ? "تعارف" : "Introduction",
+          icon: FaInfoCircle,
+          href: "/jamia",
+        },
+        {
+          id: "jamia-dept",
+          label: language === "ur" ? "شاخیں" : "Departments",
+          icon: FaBuilding,
+          href: "/jamia/departments",
+        },
+        {
+          id: "jamia-gallery",
+          label: language === "ur" ? "گیلری" : "Jamiah Gallery",
+          icon: FaImage,
+          href: "/jamia/gallery",
+        },
+      ],
+    },
+    {
+      id: "trust",
+      label: language === "ur" ? "الحبیب ٹرسٹ" : "Al-Habib Trust",
+      icon: FaHeart,
+      // href: "/trust",
+      dropdown: [
+        {
+          id: "trust-intro",
+          label: language === "ur" ? "تعارف" : "Introduction",
+          icon: FaInfoCircle,
+          href: "/trust",
+        },
+        {
+          id: "trust-aims",
+          label: language === "ur" ? "مقاصد و اہداف" : "Aims & Objectives",
+          icon: FaFileAlt,
+          href: "/trust/aims",
+        },
+        {
+          id: "trust-dept",
+          label: language === "ur" ? "شاخیں" : "Departments",
+          icon: FaBuilding,
+          href: "/trust/departments",
+        },
+        {
+          id: "trust-gallery",
+          label: language === "ur" ? "گیلری" : "Trust Gallery",
+          icon: FaImage,
+          href: "/trust/gallery",
+        },
+      ],
+    },
+    {
+      id: "maktab",
+      label: language === "ur" ? "مكتبه" : "Maktabah",
+      icon: FaGraduationCap,
+      // href: "/maktab",
+      dropdown: [
+        {
+          id: "maktab-intro",
+          label: language === "ur" ? "تعارف" : "Introduction",
+          icon: FaInfoCircle,
+          href: "/maktab/intro",
+        },
+        {
+          id: "maktab-books",
+          label: language === "ur" ? "تمام کتابیں" : "All Books",
+          icon: FaBookOpen,
+          href: "/maktab",
+        },
+      ],
+    },
+    {
       id: "fatwa",
       label: language === "ur" ? "شرعی مسائل" : "Fatwa",
       icon: FaFileAlt,
       href: "/fatwa",
     },
     {
-      id: "maktab",
-      label: language === "ur" ? "مكتبه" : "Maktaba",
-      icon: FaGraduationCap,
-      href: "/maktab",
-    },
-    {
-      id: "jamia",
-      label:
-        language === "ur" ? "دار العلوم مہذب پور" : "Darul Uloom Muhajjabpur",
-      icon: FaBuilding,
-      href: "/jamia",
-    },
-    {
-      id: "trust",
-      label: language === "ur" ? "الحبیب ٹرسٹ" : "Al-Habib Trust",
-      icon: FaHeart,
-      href: "/trust",
-    },
-    {
       id: "khanaqah",
       label: language === "ur" ? "خانقاہ" : "Khanqaah",
       icon: FaHeart,
-      href: "/khanaqah",
+      // href: "/khanaqah",
+      dropdown: [
+        {
+          id: "khanaqah-intro",
+          label: language === "ur" ? "تعارف" : "Introduction",
+          icon: FaInfoCircle,
+          href: "/khanaqah",
+        },
+        {
+          id: "khanaqah-gallery",
+          label: language === "ur" ? "گیلری" : "Khanqah Gallery",
+          icon: FaImage,
+          href: "/khanaqah/gallery",
+        },
+      ],
     },
     {
       id: "media",
       label: language === "ur" ? "میڈیا" : "Media",
       icon: FaVolumeUp,
-      href: "/media",
+      // href: "/media",
       dropdown: [
         // {
         //   id: "audio",
@@ -111,7 +187,7 @@ const Header = () => {
     },
     {
       id: "contact",
-      label: language === "ur" ? "ہم سے رابطہ کریں" : "Contact",
+      label: language === "ur" ? "رابطہ" : "Contact",
       icon: FaPhone,
       href: "/contact",
     },
@@ -230,7 +306,7 @@ const Header = () => {
 
                       {openDropdown === item.id && (
                         <div
-                          className={`absolute top-full mt-2 bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl border border-emerald-100/50 py-3 min-w-[180px] z-50 ${
+                          className={`absolute top-full mt-2 bg-white/95 backdrop-blur-sm rounded-xl shadow-2xl border border-emerald-100/50 py-3 min-w-[250px] z-50 ${
                             language === "ur" ? "right-0" : "left-0"
                           }`}
                         >
@@ -305,7 +381,11 @@ const Header = () => {
                   return (
                     <div key={item.id}>
                       <button
-                        onClick={() => toggleDropdown(item.id)}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          toggleDropdown(item.id);
+                        }}
                         className={`w-full flex items-center justify-between px-5 py-4 transition-all duration-300 rounded-lg mx-2 ${
                           language === "ur" ? "" : ""
                         } ${

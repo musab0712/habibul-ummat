@@ -58,6 +58,7 @@ const DirectionHandler = () => {
       [dir="ltr"] {
         text-align: left;
         direction: ltr;
+        
       }
     `;
 
