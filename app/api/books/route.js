@@ -11,7 +11,7 @@ export async function GET() {
   } catch (error) {
     return NextResponse.json(
       { success: false, error: error.message },
-      { status: 400 }
+      { status: 400 },
     );
   }
 }
@@ -20,12 +20,21 @@ export async function POST(request) {
   await dbConnect();
   try {
     const body = await request.json();
-    const book = await Book.create(body);
+
+    const book = await Book.create({
+      titleEnglish: body.titleEnglish,
+      titleUrdu: body.titleUrdu,
+      pdfUrl: body.pdfUrl,
+
+      coverImage: body.coverImage || "",
+      detailsImage: body.detailsImage || "",
+    });
+
     return NextResponse.json({ success: true, data: book }, { status: 201 });
   } catch (error) {
     return NextResponse.json(
       { success: false, error: error.message },
-      { status: 400 }
+      { status: 400 },
     );
   }
 }

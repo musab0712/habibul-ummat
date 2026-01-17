@@ -19,6 +19,10 @@ const BookSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  detailsImage: {
+    type: String,
+    default: "",
+  },
   uploadDate: {
     type: Date,
     default: Date.now,

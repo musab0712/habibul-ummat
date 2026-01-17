@@ -8,21 +8,30 @@ export async function PUT(request, { params }) {
   try {
     const body = await request.json();
     const { id } = await params;
-    const book = await Book.findByIdAndUpdate(id, body, {
+    const updateData = {
+      titleEnglish: body.titleEnglish,
+      titleUrdu: body.titleUrdu,
+      pdfUrl: body.pdfUrl,
+    };
+
+    if (body.coverImage) updateData.coverImage = body.coverImage;
+    if (body.detailsImage) updateData.detailsImage = body.detailsImage;
+
+    const book = await Book.findByIdAndUpdate(id, updateData, {
       new: true,
       runValidators: true,
     });
     if (!book) {
       return NextResponse.json(
         { success: false, error: "Book not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
     return NextResponse.json({ success: true, data: book });
   } catch (error) {
     return NextResponse.json(
       { success: false, error: error.message },
-      { status: 400 }
+      { status: 400 },
     );
   }
 }
@@ -35,14 +44,14 @@ export async function DELETE(request, { params }) {
     if (!deletedBook) {
       return NextResponse.json(
         { success: false, error: "Book not found" },
-        { status: 404 }
+        { status: 404 },
       );
     }
     return NextResponse.json({ success: true, data: {} });
   } catch (error) {
     return NextResponse.json(
       { success: false, error: error.message },
-      { status: 400 }
+      { status: 400 },
     );
   }
 }

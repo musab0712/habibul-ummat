@@ -27,6 +27,7 @@ export default function BooksAdmin() {
     titleUrdu: "",
     pdfUrl: "",
     coverImage: "",
+    detailsImage: "",
   });
 
   // upload progress states
@@ -78,7 +79,7 @@ export default function BooksAdmin() {
         setMessage(
           editingBook
             ? "Book updated successfully!"
-            : "Book added successfully!"
+            : "Book added successfully!",
         );
         resetForm();
         loadBooks();
@@ -117,16 +118,17 @@ export default function BooksAdmin() {
     }
   };
 
-  // const handleEdit = (book) => {
-  //   setEditingBook(book);
-  //   setFormData({
-  //     titleEnglish: book.titleEnglish || "",
-  //     titleUrdu: book.titleUrdu || "",
-  //     pdfUrl: book.pdfUrl || "",
-  //     coverImage: book.coverImage || "",
-  //   });
-  //   setShowForm(true);
-  // };
+  const handleEdit = (book) => {
+    setEditingBook(book);
+    setFormData({
+      titleEnglish: book.titleEnglish || "",
+      titleUrdu: book.titleUrdu || "",
+      pdfUrl: book.pdfUrl || "",
+      coverImage: book.coverImage || "",
+      detailsImage: book.detailsImage || "",
+    });
+    setShowForm(true);
+  };
 
   const resetForm = () => {
     setFormData({
@@ -134,6 +136,7 @@ export default function BooksAdmin() {
       titleUrdu: "",
       pdfUrl: "",
       coverImage: "",
+      detailsImage: "",
     });
     setEditingBook(null);
     setShowForm(false);
@@ -225,7 +228,9 @@ export default function BooksAdmin() {
             resolve();
           } else {
             reject(
-              new Error(`R2 upload failed (${xhr.status}): ${xhr.responseText}`)
+              new Error(
+                `R2 upload failed (${xhr.status}): ${xhr.responseText}`,
+              ),
             );
           }
         };
@@ -283,7 +288,7 @@ export default function BooksAdmin() {
       fd.append("file", file);
       fd.append(
         "upload_preset",
-        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
       );
       fd.append("folder", "books-covers");
 
@@ -293,7 +298,7 @@ export default function BooksAdmin() {
         {
           method: "POST",
           body: fd,
-        }
+        },
       );
 
       if (!response.ok) {
@@ -303,6 +308,58 @@ export default function BooksAdmin() {
 
       const data = await response.json();
       setFormData((prev) => ({ ...prev, coverImage: data.secure_url }));
+      setMessage("Image uploaded successfully!");
+      setTimeout(() => setMessage(""), 3000);
+    } catch (error) {
+      console.error("Cloudinary upload error:", error);
+      setMessage("Error uploading image. Please try again.");
+    }
+  };
+
+  const handleDetailsImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validate file size (limit to 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setMessage("Image size should be less than 5MB");
+      return;
+    }
+
+    // Validate file type
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      setMessage("Please upload a valid image file (JPG, PNG, or WebP)");
+      return;
+    }
+
+    try {
+      setMessage("Uploading image...");
+
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append(
+        "upload_preset",
+        process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
+      );
+      fd.append("folder", "books-details");
+
+      // Upload to Cloudinary
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: fd,
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || "Upload failed");
+      }
+
+      const data = await response.json();
+      setFormData((prev) => ({ ...prev, detailsImage: data.secure_url }));
       setMessage("Image uploaded successfully!");
       setTimeout(() => setMessage(""), 3000);
     } catch (error) {
@@ -484,6 +541,38 @@ export default function BooksAdmin() {
                   </div>
                 </div>
 
+                {/* Detail image */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Detail Image
+                  </label>
+                  <div className="flex items-center space-x-4">
+                    {formData.detailsImage ? (
+                      <div className="flex items-center space-x-4">
+                        <img
+                          src={formData.detailsImage}
+                          alt="Detail preview"
+                          className="w-16 h-16 object-cover rounded-md"
+                        />
+                        <span className="text-sm text-green-600 font-medium">
+                          ✓ Image uploaded
+                        </span>
+                      </div>
+                    ) : (
+                      <label className="cursor-pointer bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors flex items-center">
+                        <FiImage className="mr-2" />
+                        Upload Detail Image
+                        <input
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp"
+                          onChange={handleDetailsImageUpload}
+                          className="hidden"
+                        />
+                      </label>
+                    )}
+                  </div>
+                </div>
+
                 <div className="flex justify-end space-x-3 pt-4">
                   <button
                     type="button"
@@ -501,8 +590,8 @@ export default function BooksAdmin() {
                     {isSaving
                       ? "Saving..."
                       : editingBook
-                      ? "Update Book"
-                      : "Add Book"}
+                        ? "Update Book"
+                        : "Add Book"}
                   </button>
                 </div>
               </form>
@@ -516,6 +605,9 @@ export default function BooksAdmin() {
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Cover
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Details
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       English Title
@@ -557,25 +649,38 @@ export default function BooksAdmin() {
                             </div>
                           )}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {book.detailsImage ? (
+                            <img
+                              src={book.detailsImage}
+                              alt={book.titleEnglish}
+                              className="w-12 h-16 object-cover rounded-md"
+                            />
+                          ) : (
+                            <div className="w-12 h-16 bg-gray-200 rounded-md flex items-center justify-center">
+                              <FiFileText className="text-gray-400" />
+                            </div>
+                          )}
+                        </td>
+                        <td className=" py-4 whitespace-nowrap text-sm text-gray-900">
                           {book.titleEnglish}
                         </td>
                         <td
-                          className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
+                          className=" px-3 py-4 whitespace-nowrap text-sm text-gray-900"
                           dir="rtl"
                         >
                           {book.titleUrdu}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-500">
                           {new Date(book.uploadDate).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          {/* <button
+                          <button
                             onClick={() => handleEdit(book)}
                             className="text-blue-600 hover:text-blue-900 mr-3"
                           >
                             <FiEdit />
-                          </button> */}
+                          </button>
                           <button
                             onClick={() => handleDelete(book._id)}
                             className="text-red-600 hover:text-red-900"

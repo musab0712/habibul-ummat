@@ -1,24 +1,27 @@
-// app/[lang]/maktaba/BooksPageClient.jsx
 "use client";
 import React, { useState, useEffect } from "react";
 import {
   FaBook,
-  FaDownload,
   FaSearch,
-  FaFilter,
   FaSpinner,
   FaCalendar,
-  FaBalanceScale,
+  FaRegEye,
 } from "react-icons/fa";
 import { useLanguage } from "../../../context/LanguageContext";
 
 const BooksPageClient = () => {
   const { language } = useLanguage();
+
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const [previewImage, setPreviewImage] = useState(null);
+  const [pdfPreview, setPdfPreview] = useState(null);
+  const [readingProgress, setReadingProgress] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
     fetchAllBooks();
@@ -41,8 +44,8 @@ const BooksPageClient = () => {
         setError("Failed to fetch books");
       }
     } catch (err) {
+      console.error(err);
       setError("Error fetching books");
-      console.error("Error fetching books:", err);
     } finally {
       setLoading(false);
     }
@@ -57,10 +60,31 @@ const BooksPageClient = () => {
     const filtered = books.filter(
       (book) =>
         book.titleEnglish.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        book.titleUrdu.includes(searchTerm) ||
-        book.titleUrdu.toLowerCase().includes(searchTerm.toLowerCase())
+        book.titleUrdu.toLowerCase().includes(searchTerm.toLowerCase()),
     );
+
     setFilteredBooks(filtered);
+  };
+
+  const handlePdfScroll = (e) => {
+    const element = e.target;
+    const scrollTop = element.scrollTop;
+    const scrollHeight = element.scrollHeight - element.clientHeight;
+
+    const progress = Math.round((scrollTop / scrollHeight) * 100);
+    setReadingProgress(progress || 0);
+  };
+
+  const toggleFullscreen = () => {
+    const elem = document.getElementById("pdf-reader-container");
+
+    if (!document.fullscreenElement) {
+      elem.requestFullscreen();
+      setIsFullscreen(true);
+    } else {
+      document.exitFullscreen();
+      setIsFullscreen(false);
+    }
   };
 
   const formatDate = (dateString) => {
@@ -72,187 +96,163 @@ const BooksPageClient = () => {
     });
   };
 
+  // const handleReadBook = (pdfUrl) => {
+  //   window.open(pdfUrl, "_blank");
+  // };
+
   const handleReadBook = (pdfUrl) => {
-    window.open(pdfUrl, "_blank");
+    setPdfPreview(pdfUrl);
   };
+
+  /* ---------------- LOADING ---------------- */
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-white to-emerald-50 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-center items-center py-20">
-            <FaSpinner className="h-12 w-12 text-emerald-600 animate-spin" />
-          </div>
-        </div>
+      <div className="min-h-screen flex justify-center items-center bg-gradient-to-br from-white to-emerald-50">
+        <FaSpinner className="text-emerald-600 text-4xl animate-spin" />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white to-emerald-50">
-      {/* Header */}
+      {/* ---------------- HEADER ---------------- */}
+
       <div className="bg-gradient-to-r from-emerald-800 to-emerald-700 text-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
+        <div className="max-w-7xl mx-auto text-center px-4">
+          <h1 className="text-4xl md:text-6xl font-bold mb-4">
             {language === "ur" ? "کتب خانہ" : "Library"}
           </h1>
-          <p className="text-xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-emerald-100 max-w-3xl mx-auto">
             {language === "ur"
-              ? "اسلامی علم کے وسیع ذخیرے سے مستفید ہوں"
-              : "Explore our comprehensive collection of Islamic knowledge"}
+              ? "اسلامی کتب کا مکمل ڈیجیٹل ذخیرہ"
+              : "Complete digital archive of Islamic books"}
           </p>
         </div>
       </div>
 
-      {/* Search and Filter Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-10">
-        <div className="bg-white rounded-2xl shadow-xl p-6 border border-emerald-100">
-          <div className="flex flex-col md:flex-row gap-4 items-center">
-            <div className="flex-1 relative">
-              <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-emerald-400 h-5 w-5" />
-              <input
-                type="text"
-                placeholder={
-                  language === "ur" ? "کتابیں تلاش کریں..." : "Search books..."
-                }
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 bg-emerald-50 border border-emerald-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-lg"
-              />
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg font-semibold">
-                {filteredBooks.length} {language === "ur" ? "کتابیں" : "Books"}
-              </div>
-            </div>
+      {/* ---------------- SEARCH BAR ---------------- */}
+
+      <div className="max-w-7xl mx-auto px-4 -mt-8 relative z-10">
+        <div className="bg-white rounded-xl shadow-lg p-5 flex flex-col md:flex-row gap-4 items-center">
+          <div className="flex-1 relative">
+            <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-500" />
+            <input
+              type="text"
+              placeholder={
+                language === "ur" ? "کتاب تلاش کریں..." : "Search books..."
+              }
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-11 pr-4 py-3 border border-emerald-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            />
+          </div>
+
+          <div className="bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg font-semibold">
+            {filteredBooks.length} {language === "ur" ? "کتابیں" : "Books"}
           </div>
         </div>
       </div>
 
-      {/* Books Grid */}
+      {/* ---------------- BOOK GRID ---------------- */}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 py-12">
         {error ? (
-          <div className="text-center bg-red-50 border border-red-200 rounded-2xl p-8">
-            <p className="text-red-600 text-lg">{error}</p>
-            <button className="mt-4 bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300">
-              {language === "ur" ? "دوبارہ کوشش کریں" : "Try Again"}
-            </button>
-          </div>
+          <div className="text-center text-red-600">{error}</div>
         ) : filteredBooks.length === 0 ? (
-          <div className="text-center py-16">
-            <svg
-              className="h-20 w-20 text-emerald-300 mx-auto mb-6"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M3 4a2 2 0 012-2h6a2 2 0 012 2v12a1 1 0 11-2 0V4H5v10a1 1 0 11-2 0V4z" />
-            </svg>
-            <h3 className="text-2xl font-bold text-emerald-900 mb-4">
-              {language === "ur" ? "کوئی کتابیں نہیں ملیں" : "No Books Found"}
+          <div className="text-center py-20">
+            <FaBook className="text-emerald-300 text-6xl mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-emerald-900">
+              {language === "ur" ? "کوئی کتاب نہیں ملی" : "No Books Found"}
             </h3>
-            <p className="text-emerald-600 text-lg">
-              {language === "ur"
-                ? "براہ کرم اپنی تلاش کی اصطلاح تبدیل کریں"
-                : "Please try different search terms"}
-            </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
             {filteredBooks.map((book) => (
               <div
                 key={book._id}
-                className="group relative h-[500px] sm:h-[450px] rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl cursor-pointer"
+                className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition overflow-hidden"
               >
-                {/* Book Cover - Fully Visible */}
-                <div className="w-full h-11/12">
-                  {book.coverImage ? (
-                    <img
-                      src={book.coverImage}
-                      alt={
-                        language === "ur" ? book.titleUrdu : book.titleEnglish
-                      }
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-emerald-600 to-emerald-800 flex items-center justify-center">
-                      <svg
-                        className="h-20 w-20 text-emerald-200"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
+                {/* ---------------- IMAGES ---------------- */}
+
+                <div className="grid grid-cols-2 h-[320px]">
+                  {/* COVER IMAGE */}
+
+                  <div className="relative group overflow-hidden">
+                    {book.coverImage ? (
+                      <img
+                        src={book.coverImage}
+                        alt="Cover"
+                        className="w-full h-full object-cover group-hover:scale-110 transition"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-emerald-700 flex items-center justify-center">
+                        <FaBook className="text-white text-3xl" />
+                      </div>
+                    )}
+
+                    {book.coverImage && (
+                      <button
+                        onClick={() => setPreviewImage(book.coverImage)}
+                        className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white"
                       >
-                        <path d="M3 4a2 2 0 012-2h6a2 2 0 012 2v12a1 1 0 11-2 0V4H5v10a1 1 0 11-2 0V4z" />
-                      </svg>
-                    </div>
-                  )}
+                        <FaRegEye className="mr-2" />
+                        {language === "ur" ? "دیکھیں" : "Preview"}
+                      </button>
+                    )}
+                  </div>
+
+                  {/* DETAILS IMAGE */}
+
+                  <div className="relative group overflow-hidden">
+                    {book.detailsImage ? (
+                      <img
+                        src={book.detailsImage}
+                        alt="Details"
+                        className="w-full h-full object-cover group-hover:scale-110 transition"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-200 flex items-center justify-center text-xs text-gray-500">
+                        {language === "ur" ? "تصویر نہیں" : "No Image"}
+                      </div>
+                    )}
+
+                    {book.detailsImage && (
+                      <button
+                        onClick={() => setPreviewImage(book.detailsImage)}
+                        className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white"
+                      >
+                        <FaRegEye className="mr-2" />
+                        {language === "ur" ? "صفحہ دیکھیں" : "Preview"}
+                      </button>
+                    )}
+                  </div>
                 </div>
 
-                <h1 className="absolute bottom-0 left-0 right-0 bg-black/70 text-white text-center py-2 px-4 text-sm font-semibold line-clamp-1">
-                  {language === "ur" ? book.titleUrdu : book.titleEnglish}
-                </h1>
-                {/* Mobile-only button */}
-                <button
-                  onClick={() => window.open(book.pdfUrl, "_blank")}
-                  className="md:hidden absolute bottom-10 left-1/2 -translate-x-1/2 z-20
-             bg-emerald-600 hover:bg-emerald-700 text-white 
-             text-xs font-semibold px-4 py-2 rounded-lg shadow-lg"
-                >
-                  {language === "ur" ? "مطالعہ کریں" : "Read Book"}
-                </button>
+                {/* ---------------- CONTENT ---------------- */}
 
-                {/* Overlay - Hidden by default, shown on hover */}
-                <div className="absolute inset-0 bg-black/70 pointer-events-none md:pointer-events-auto flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4">
-                  <div className="text-center">
-                    <h3 className="text-lg font-bold text-white mb-2 line-clamp-2">
-                      {language === "ur" ? book.titleUrdu : book.titleEnglish}
-                    </h3>
+                <div className="p-2">
+                  <h3 className="font-bold text-emerald-900 line-clamp-1 mb-2 text-center">
+                    {language === "ur" ? book.titleUrdu : book.titleEnglish}
+                  </h3>
 
-                    {/* Bilingual Title */}
-                    <p className="text-emerald-100 text-xs mb-4 line-clamp-1">
-                      {language === "ur" ? book.titleEnglish : book.titleUrdu}
-                    </p>
+                  {/* <p className="text-sm text-gray-500 line-clamp-1">
+                    {language === "ur" ? book.titleEnglish : book.titleUrdu}
+                  </p> */}
 
-                    {/* Upload Date */}
-                    <div className="flex items-center justify-center text-emerald-200 text-xs mb-4">
-                      <svg
-                        className="h-3 w-3 mr-1"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v2h16V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h12a1 1 0 100-2H6z"
-                        />
-                      </svg>
-                      <span>{formatDate(book.uploadDate)}</span>
-                    </div>
+                  {/* <div className="flex items-center text-xs text-emerald-600 mt-2 mb-3">
+                    <FaCalendar className="mr-1" />
+                    {formatDate(book.uploadDate)}
+                  </div> */}
 
-                    {/* Action Buttons */}
-                    <div className="flex flex-col gap-2 w-full">
-                      <button
-                        onClick={() => handleReadBook(book.pdfUrl)}
-                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 px-3 rounded-lg font-semibold transition-all duration-300 text-sm flex items-center justify-center"
-                      >
-                        <FaBalanceScale className="h-4 w-4 mr-1" />
-                        {language === "ur" ? "پڑھیں" : "Read"}
-                      </button>
-                      {/* <button
-                        onClick={() => window.open(book.pdfUrl, "_blank")}
-                        className="w-full bg-amber-500 hover:bg-amber-600 text-white py-2 px-3 rounded-lg font-semibold transition-all duration-300 text-sm flex items-center justify-center"
-                      >
-                        <svg
-                          className="h-4 w-4 mr-1"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                          />
-                        </svg>
-                        {language === "ur" ? "ڈاؤن لوڈ کریں" : "Download"}
-                      </button> */}
-                    </div>
-                  </div>
+                  {/* ---------------- READ BUTTON ---------------- */}
+
+                  <button
+                    onClick={() => handleReadBook(book.pdfUrl)}
+                    className="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white py-2 rounded-lg font-semibold transition shadow-md"
+                  >
+                    {language === "ur" ? "کتاب پڑھیں" : "Read Book"}
+                  </button>
                 </div>
               </div>
             ))}
@@ -260,21 +260,105 @@ const BooksPageClient = () => {
         )}
       </div>
 
-      {/* Call to Action */}
-      <div className="bg-gradient-to-r from-emerald-800 to-emerald-700 py-12 mt-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            {language === "ur"
-              ? "علم کا سفر جاری رکھیں"
-              : "Continue Your Journey of Knowledge"}
-          </h2>
-          <p className="text-emerald-100 text-lg mb-6 max-w-2xl mx-auto">
-            {language === "ur"
-              ? "ہماری تمام کتابیں مفت میں دستیاب ہیں۔ علم حاصل کرتے رہیں اور دوسروں تک پہنچائیں۔"
-              : "All our books are available for free. Keep learning and sharing knowledge with others."}
-          </p>
+      {/* ---------------- IMAGE MODAL ---------------- */}
+
+      {previewImage && (
+        <div
+          onClick={() => setPreviewImage(null)}
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative bg-white rounded-xl max-w-5xl w-full max-h-[90vh] overflow-hidden"
+          >
+            <button
+              onClick={() => setPreviewImage(null)}
+              className="absolute top-3 right-3 bg-black text-white w-8 h-8 rounded-full flex items-center justify-center"
+            >
+              ✕
+            </button>
+
+            <div className="overflow-auto max-h-[90vh]">
+              <img
+                src={previewImage}
+                alt="Preview"
+                className="w-full object-contain"
+              />
+            </div>
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* ---------------- ADVANCED PDF INLINE READER ---------------- */}
+
+      {pdfPreview && (
+        <div
+          onClick={() => setPdfPreview(null)}
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-3"
+        >
+          <div
+            id="pdf-reader-container"
+            onClick={(e) => e.stopPropagation()}
+            className="relative bg-white rounded-xl w-full max-w-6xl h-[90vh] shadow-2xl overflow-hidden flex flex-col"
+          >
+            {/* ---------- TOP BAR ---------- */}
+
+            <div className="bg-emerald-700 text-white px-4 py-2 flex justify-between items-center">
+              <span className="text-sm font-semibold">
+                {language === "ur" ? "کتاب مطالعہ" : "Reading Book"}
+              </span>
+
+              <div className="flex items-center gap-2">
+                {/* Fullscreen Button */}
+                <button
+                  onClick={toggleFullscreen}
+                  className="bg-black/30 hover:bg-black/50 px-3 py-1 rounded-md text-xs"
+                >
+                  {isFullscreen
+                    ? language === "ur"
+                      ? "بند کریں"
+                      : "Exit Fullscreen"
+                    : language === "ur"
+                      ? "فل اسکرین"
+                      : "Fullscreen"}
+                </button>
+
+                {/* Close Button */}
+                <button
+                  onClick={() => {
+                    setPdfPreview(null);
+                    setReadingProgress(0);
+                  }}
+                  className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded-md text-xs"
+                >
+                  ✕ Close
+                </button>
+              </div>
+            </div>
+
+            {/* ---------- PROGRESS BAR ---------- */}
+
+            <div className="h-1 bg-gray-200 w-full">
+              <div
+                className="h-1 bg-emerald-600 transition-all duration-200"
+                style={{ width: `${readingProgress}%` }}
+              />
+            </div>
+
+            {/* ---------- PDF SCROLL CONTAINER ---------- */}
+
+            <div
+              onScroll={handlePdfScroll}
+              className="flex-1 overflow-auto bg-gray-100"
+            >
+              <iframe
+                src={`${pdfPreview}#toolbar=0`}
+                className="w-full h-full"
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
